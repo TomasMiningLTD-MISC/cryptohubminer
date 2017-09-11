@@ -8,5 +8,5 @@ TryExec=python3 /usr/bin/cryptohubminer/miner.py
 Icon=vlc
 Terminal=false
 Type=Application
-Categories=Internet,Mining;
+Categories=Internet;Mining;
 Keywords=Mining;
