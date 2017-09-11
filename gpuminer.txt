@@ -1,34 +1,144 @@
-*** ccminer alexis-1.0 for nVidia GPUs from alexis78@github ***
-*** Built with the nVidia CUDA Toolkit 8.0 (Not recommended prefer 7.5)
-
-*** Based on tpruvot@github ccminer
-*** Originally based on Christian Buchner and Christian H. project
-*** Include some of the work of djm34, sp, tsiv and klausT.
-
-[2017-09-04 07:57:43][36m Starting on stratum+tcp://cryptohub.online:3052[0m
-[2017-09-04 07:57:43] NVML GPU monitoring enabled.[0m
-[2017-09-04 07:57:43] 1 miner thread started, using 'nist5' algorithm.[0m
-[2017-09-04 07:57:45][33m Stratum difficulty set to 0.02[0m
-[2017-09-04 07:57:45] GPU#0:Intensity set to 21, 2097152 cuda threads[0m
-[2017-09-04 07:57:47][01;37m [S/A/T]: 0/1/1, diff: 0.092, 15.52MH/s [32myes![0m
-[2017-09-04 07:57:53][01;37m [S/A/T]: 0/2/2, diff: 0.050, 18.57MH/s [32myes![0m
-[2017-09-04 07:57:56][01;37m [S/A/T]: 0/3/3, diff: 0.083, 20.09MH/s [32myes![0m
-[2017-09-04 07:57:56][01;37m [S/A/T]: 0/4/4, diff: 0.071, 21.00MH/s [32myes![0m
-[2017-09-04 07:58:02][01;37m [S/A/T]: 0/5/5, diff: 0.147, 21.59MH/s [32myes![0m
-[2017-09-04 07:58:04][01;37m [S/A/T]: 0/6/6, diff: 0.024, 22.01MH/s [32myes![0m
-[2017-09-04 07:58:07][01;37m [S/A/T]: 0/7/7, diff: 0.020, 22.32MH/s [32myes![0m
-[2017-09-04 07:58:11][01;37m [S/A/T]: 0/8/8, diff: 0.124, 22.53MH/s [32myes![0m
-[2017-09-04 07:58:13][01;37m [S/A/T]: 0/9/9, diff: 0.071, 22.67MH/s [32myes![0m
-[2017-09-04 07:58:26] GPU#0:MSI GTX 1060 3GB, 23.54MH/s[0m
-[2017-09-04 07:58:26][01;37m [S/A/T]: 0/10/10, diff: 0.033, 22.75MH/s [32myes![0m
-[2017-09-04 07:58:29][01;37m [S/A/T]: 0/11/11, diff: 0.022, 22.85MH/s [32myes![0m
-[2017-09-04 07:58:30][01;37m [S/A/T]: 0/12/12, diff: 0.030, 22.92MH/s [32myes![0m
-[2017-09-04 07:58:31][01;37m [S/A/T]: 0/13/13, diff: 0.023, 23.00MH/s [32myes![0m
-[2017-09-04 07:58:34][01;37m [S/A/T]: 0/14/14, diff: 0.104, 23.12MH/s [32myes![0m
-[2017-09-04 07:58:39][01;37m [S/A/T]: 0/15/15, diff: 0.026, 23.18MH/s [32myes![0m
-[2017-09-04 07:58:50][01;37m [S/A/T]: 0/16/16, diff: 0.036, 23.25MH/s [32myes![0m
-[2017-09-04 07:58:51][01;37m [S/A/T]: 0/17/17, diff: 0.035, 23.32MH/s [32myes![0m
-[2017-09-04 07:58:57][01;37m [S/A/T]: 0/18/18, diff: 0.062, 23.39MH/s [32myes![0m
-[2017-09-04 07:58:59][33m Stratum difficulty set to 0.08[0m
-[2017-09-04 07:59:01][01;37m [S/A/T]: 0/19/19, diff: 0.068, 23.45MH/s [32myes![0m
-[2017-09-04 07:59:04][01;37m [S/A/T]: 0/20/20, diff: 0.237, 23.50MH/s [32myes![0m
+[08:02:12] Started sgminer 5.3.9                    
+[08:02:12] * using Jansson 2.6                    
+[08:02:12] CL Platform vendor: NVIDIA Corporation                    
+[08:02:12] CL Platform name: NVIDIA CUDA                    
+[08:02:12] CL Platform version: OpenCL 1.2 CUDA 8.0.0                    
+[08:02:12] Platform devices: 1                    
+[08:02:12] 	0	GeForce GTX 1060 3GB                    
+[08:02:12] Unable to load the AMD Display Library                    
+[08:02:12] WARNING: GPU_MAX_ALLOC_PERCENT is not specified!                    
+[08:02:12] WARNING: GPU_USE_SYNC_OBJECTS is not specified!                    
+[08:02:12] Probing for an alive pool                    
+[08:02:12] Testing cryptohub.online                    
+[08:02:13] cryptohub.online difficulty changed to 0.020                    
+[08:02:15] Stratum authorisation success for cryptohub.online                    
+[08:02:15] cryptohub.online alive                    
+[08:02:15] Startup GPU initialization... Using settings from pool cryptohub.online.                    
+[08:02:15] Startup Pool No = 0                    
+[08:02:15] Init GPU thread 0 GPU 0 virtual GPU 0                    
+[08:02:15] CL Platform vendor: NVIDIA Corporation                    
+[08:02:15] CL Platform name: NVIDIA CUDA                    
+[08:02:15] CL Platform version: OpenCL 1.2 CUDA 8.0.0                    
+[08:02:15] Platform devices: 1                    
+[08:02:15] 	0	GeForce GTX 1060 3GB                    
+[08:02:15] List of devices:                    
+[08:02:15] 	0	GeForce GTX 1060 3GB                    
+[08:02:15] Selected 0: GeForce GTX 1060 3GB                    
+[08:02:15] Maximum work size for this GPU (0) is 1024.                    
+[08:02:15] Your GPU (#0) has 9 compute units, and all AMD cards in the 7 series or newer (GCN cards) have 64 shaders per unit, this means it has 576 shaders.                    
+[08:02:15] GPU 0 PCI BUS 01                    
+[08:02:15] NVIDIA management enabled on GPU 0                    
+[08:02:15] Initialising kernel talkcoin-mod.cl                    
+[08:02:15] initCl() finished. Found GeForce GTX 1060 3GB                    
+[08:02:17] Work update message received                    
+[08:02:17] New block: 3c22bfebf3a2917fba6518402a7b546b81ad36869548b3554cb41e34f166f2e3... diff 28                    
+[08:02:21] New best share: 0.067                    
+[08:02:21] Submitting share ea258402 to cryptohub.online                    
+[08:02:21] Pool 0 stratum share submission lag time 0 seconds                    
+[08:02:22] Pool 0 stratum share result lag time 1 seconds                    
+[08:02:22] Accepted 0eea2584 Diff 0.067/0.020 GPU 0                     
+(5s):4.317M (avg):11.05Mh/s | A:0  R:0  HW:0  WU:0.234/m          [08:02:25] New best share: 0.299                    
+[08:02:25] Submitting share 582e8dcc to cryptohub.online                    
+[08:02:25] Pool 0 stratum share submission lag time 0 seconds                    
+[08:02:25] Pool 0 stratum share result lag time 0 seconds                    
+[08:02:25] Accepted 03582e8d Diff 0.299/0.020 GPU 0                     
+(5s):6.999M (avg):11.08Mh/s | A:0  R:0  HW:0  WU:0.231/m          (5s):8.599M (avg):11.09Mh/s | A:0  R:0  HW:0  WU:0.155/m          [08:02:33] Work update message received                    
+(5s):9.546M (avg):11.06Mh/s | A:0  R:0  HW:0  WU:0.115/m          (5s):9.954M (avg):10.97Mh/s | A:0  R:0  HW:0  WU:0.092/m          (5s):10.56M (avg):11.06Mh/s | A:0  R:0  HW:0  WU:0.077/m          (5s):10.72M (avg):11.04Mh/s | A:0  R:0  HW:0  WU:0.066/m          [08:02:53] Submitting share ead4d521 to cryptohub.online                    
+[08:02:53] Pool 0 stratum share submission lag time 0 seconds                    
+[08:02:54] Submitting share 8bf63d01 to cryptohub.online                    
+[08:02:54] Pool 0 stratum share submission lag time 0 seconds                    
+[08:02:54] Pool 0 stratum share result lag time 1 seconds                    
+[08:02:54] Accepted 1cead4d5 Diff 0.035/0.020 GPU 0                     
+[08:02:54] Pool 0 stratum share result lag time 0 seconds                    
+[08:02:54] Accepted 2e8bf63d Diff 0.021/0.020 GPU 0                     
+[08:02:55] Submitting share 89d3d568 to cryptohub.online                    
+[08:02:55] Pool 0 stratum share submission lag time 0 seconds                    
+[08:02:55] Pool 0 stratum share result lag time 0 seconds                    
+[08:02:55] Accepted 0f89d3d5 Diff 0.064/0.020 GPU 0                     
+(5s):10.82M (avg):11.04Mh/s | A:0  R:0  HW:0  WU:0.144/m          [08:02:59] Submitting share 326471df to cryptohub.online                    
+[08:02:59] Pool 0 stratum share submission lag time 0 seconds                    
+[08:02:59] Pool 0 stratum share result lag time 0 seconds                    
+[08:02:59] Accepted 30326471 Diff 0.021/0.020 GPU 0                     
+(5s):10.89M (avg):11.03Mh/s | A:0  R:0  HW:0  WU:0.154/m          (5s):10.70M (avg):10.97Mh/s | A:0  R:0  HW:0  WU:0.138/m          [08:03:12] Submitting share 5448824c to cryptohub.online                    
+[08:03:12] Pool 0 stratum share submission lag time 0 seconds                    
+[08:03:12] Pool 0 stratum share result lag time 0 seconds                    
+[08:03:12] Accepted 17544882 Diff 0.043/0.020 GPU 0                     
+(5s):10.93M (avg):11.00Mh/s | A:0  R:0  HW:0  WU:0.147/m          (5s):10.87M (avg):10.98Mh/s | A:0  R:0  HW:0  WU:0.134/m          [08:03:19] Submitting share f5c1491d to cryptohub.online                    
+[08:03:19] Pool 0 stratum share submission lag time 0 seconds                    
+[08:03:20] Pool 0 stratum share result lag time 1 seconds                    
+[08:03:20] Accepted 1af5c149 Diff 0.037/0.020 GPU 0                     
+[08:03:23] Submitting share a7e51e97 to cryptohub.online                    
+[08:03:23] Pool 0 stratum share submission lag time 0 seconds                    
+[08:03:23] Pool 0 stratum share result lag time 0 seconds                    
+[08:03:23] Accepted 0ea7e51e Diff 0.068/0.020 GPU 0                     
+[08:03:24] Submitting share 70c2f687 to cryptohub.online                    
+[08:03:24] Pool 0 stratum share submission lag time 0 seconds                    
+[08:03:24] Pool 0 stratum share result lag time 0 seconds                    
+[08:03:24] Accepted 0370c2f6 Diff 0.291/0.020 GPU 0                     
+(5s):10.82M (avg):10.96Mh/s | A:0  R:0  HW:0  WU:0.177/m          [08:03:28] cryptohub.online difficulty changed to 0.041                    
+[08:03:28] Work update message received                    
+(5s):10.79M (avg):10.95Mh/s | A:0  R:0  HW:0  WU:0.164/m          [08:03:33] GPU 0: Share above target                    
+(5s):10.67M (avg):10.91Mh/s | A:0  R:0  HW:0  WU:0.169/m          (5s):10.85M (avg):10.93Mh/s | A:0  R:0  HW:0  WU:0.159/m          (5s):10.84M (avg):10.92Mh/s | A:0  R:0  HW:0  WU:0.150/m          [08:03:48] GPU 0: Share above target                    
+(5s):10.80M (avg):10.91Mh/s | A:0  R:0  HW:0  WU:0.154/m          [08:03:52] New block: 000000000301147ef721881ed399bcb2f4c584948e73782a644fdd05c9bb8c9b... diff 21                    
+[08:03:52] Work update message received                    
+(5s):10.79M (avg):10.90Mh/s | A:0  R:0  HW:0  WU:0.146/m          [08:03:56] Submitting share 9d703d89 to cryptohub.online                    
+[08:03:56] Pool 0 stratum share submission lag time 0 seconds                    
+[08:03:56] Pool 0 stratum share result lag time 0 seconds                    
+[08:03:56] Accepted 119d703d Diff 0.057/0.041 GPU 0                     
+(5s):10.83M (avg):10.90Mh/s | A:0  R:0  HW:0  WU:0.150/m          [08:04:02] Submitting share e950d27f to cryptohub.online                    
+[08:04:02] Pool 0 stratum share submission lag time 0 seconds                    
+[08:04:02] cryptohub.online difficulty changed to 0.019                    
+[08:04:02] New block: 21d4250fc86d015145d7ebec82ebb37eafd7450260665f6fc63438168a8d715d... diff 21                    
+[08:04:02] Pool 0 stratum share result lag time 0 seconds                    
+[08:04:02] Rejected 15e950d2 Diff 0.046/0.041 GPU 0  (job not found)                     
+[08:04:02] Work update message received                    
+[08:04:04] New block: b32a9323607ea08c40c11aa7385f50789772f1a98e0323e49693c4ba526d7f77... diff 21                    
+[08:04:04] Work update message received                    
+(5s):10.82M (avg):10.90Mh/s | A:0  R:0  HW:0  WU:0.155/m          (5s):10.78M (avg):10.89Mh/s | A:0  R:0  HW:0  WU:0.147/m          (5s):10.78M (avg):10.89Mh/s | A:0  R:0  HW:0  WU:0.141/m          (5s):10.81M (avg):10.88Mh/s | A:0  R:0  HW:0  WU:0.135/m          [08:04:23] Submitting share 2c3d9ddb to cryptohub.online                    
+[08:04:23] Pool 0 stratum share submission lag time 0 seconds                    
+[08:04:23] Pool 0 stratum share result lag time 0 seconds                    
+[08:04:23] Accepted 232c3d9d Diff 0.028/0.019 GPU 0                     
+(5s):10.89M (avg):10.89Mh/s | A:0  R:0  HW:0  WU:0.138/m          [08:04:29] Submitting share a9dda2fa to cryptohub.online                    
+[08:04:29] Pool 0 stratum share submission lag time 0 seconds                    
+[08:04:30] Pool 0 stratum share result lag time 1 seconds                    
+[08:04:30] Accepted 0ea9dda2 Diff 0.068/0.019 GPU 0                     
+(5s):10.92M (avg):10.89Mh/s | A:0  R:0  HW:0  WU:0.141/m          (5s):10.91M (avg):10.89Mh/s | A:0  R:0  HW:0  WU:0.136/m          [08:04:37] Submitting share 7d850cc9 to cryptohub.online                    
+[08:04:37] Pool 0 stratum share submission lag time 0 seconds                    
+[08:04:37] Pool 0 stratum share result lag time 0 seconds                    
+[08:04:37] Accepted 267d850c Diff 0.026/0.019 GPU 0                     
+[08:04:40] Submitting share d8e5518a to cryptohub.online                    
+[08:04:40] Pool 0 stratum share submission lag time 0 seconds                    
+[08:04:40] Pool 0 stratum share result lag time 0 seconds                    
+[08:04:40] Accepted 24d8e551 Diff 0.027/0.019 GPU 0                     
+(5s):10.93M (avg):10.90Mh/s | A:0  R:0  HW:0  WU:0.147/m          [08:04:45] Submitting share edf50b30 to cryptohub.online                    
+[08:04:45] Pool 0 stratum share submission lag time 0 seconds                    
+[08:04:46] Pool 0 stratum share result lag time 1 seconds                    
+[08:04:46] Accepted 15edf50b Diff 0.046/0.019 GPU 0                     
+(5s):11.03M (avg):10.91Mh/s | A:0  R:0  HW:0  WU:0.150/m          (5s):11.21M (avg):10.93Mh/s | A:0  R:0  HW:0  WU:0.145/m          (5s):11.28M (avg):10.94Mh/s | A:0  R:0  HW:0  WU:0.140/m          [08:04:58] cryptohub.online difficulty changed to 0.026                    
+[08:04:59] New block: 000000000a32cb1ce6ba17c9427981e6d0eccbac0912a1e9425db1258748f147... diff 32                    
+[08:04:59] Work update message received                    
+(5s):11.34M (avg):10.96Mh/s | A:0  R:0  HW:0  WU:0.136/m          [08:05:04] GPU 0: Share above target                    
+[08:05:06] Submitting share ff624398 to cryptohub.online                    
+[08:05:06] Pool 0 stratum share submission lag time 0 seconds                    
+[08:05:06] Pool 0 stratum share result lag time 0 seconds                    
+[08:05:06] Accepted 0cff6243 Diff 0.077/0.026 GPU 0                     
+(5s):11.38M (avg):10.97Mh/s | A:0  R:0  HW:0  WU:0.145/m          [08:05:08] Submitting share 678b78bc to cryptohub.online                    
+[08:05:08] Pool 0 stratum share submission lag time 0 seconds                    
+[08:05:08] Pool 0 stratum share result lag time 0 seconds                    
+[08:05:08] Accepted 06678b78 Diff 0.156/0.026 GPU 0                     
+(5s):11.38M (avg):10.98Mh/s | A:0  R:0  HW:0  WU:0.147/m          (5s):11.41M (avg):11.00Mh/s | A:0  R:0  HW:0  WU:0.143/m          (5s):11.44M (avg):11.01Mh/s | A:0  R:0  HW:0  WU:0.139/m          (5s):11.38M (avg):11.02Mh/s | A:0  R:0  HW:0  WU:0.135/m          [08:05:29] Submitting share 150b00a2 to cryptohub.online                    
+[08:05:29] Pool 0 stratum share submission lag time 0 seconds                    
+[08:05:29] Pool 0 stratum share result lag time 0 seconds                    
+[08:05:29] Accepted 07150b00 Diff 0.141/0.026 GPU 0                     
+(5s):11.23M (avg):11.02Mh/s | A:0  R:0  HW:0  WU:0.138/m          (5s):11.12M (avg):11.01Mh/s | A:0  R:0  HW:0  WU:0.134/m          [08:05:40] Submitting share 72cada23 to cryptohub.online                    
+[08:05:40] Pool 0 stratum share submission lag time 0 seconds                    
+[08:05:40] Pool 0 stratum share result lag time 0 seconds                    
+[08:05:40] Accepted 0a72cada Diff 0.096/0.026 GPU 0                     
+[08:05:41] Submitting share 5b8314a3 to cryptohub.online                    
+[08:05:41] Pool 0 stratum share submission lag time 0 seconds                    
+[08:05:41] Pool 0 stratum share result lag time 0 seconds                    
+[08:05:41] Accepted 155b8314 Diff 0.047/0.026 GPU 0                     
+(5s):11.06M (avg):11.01Mh/s | A:0  R:0  HW:0  WU:0.141/m          [08:05:47] GPU 0: Share above target                    
+(5s):11.09M (avg):11.02Mh/s | A:0  R:0  HW:0  WU:0.143/m          [08:05:53] cryptohub.online difficulty changed to 0.034                    
+[08:05:54] Work update message received                    
+(5s):10.87M (avg):11.00Mh/s | A:0  R:0  HW:0  WU:0.140/m          (5s):11.25M (avg):11.02Mh/s | A:0  R:0  HW:0  WU:0.137/m          (5s):11.15M (avg):11.02Mh/s | A:0  R:0  HW:0  WU:0.134/m          (5s):11.18M (avg):11.03Mh/s | A:0  R:0  HW:0  WU:0.131/m          

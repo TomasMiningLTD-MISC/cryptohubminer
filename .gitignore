@@ -1,3 +1,4 @@
 .idea
 ccminer/*
 cpuminer/*
+debian_pkg/*
