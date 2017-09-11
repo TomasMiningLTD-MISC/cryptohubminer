@@ -65,7 +65,7 @@ class gui():
         self.window.set_default_size(800, 600)
         self.window.set_title("CryptoHubMiner")
         self.window.connect('delete-event', self.on_destroy)
-        self.window.set_icon_from_file(self.get_resource_path("media/icon.png"))
+        self.window.set_icon_from_file(self.get_resource_path("imgs/icon.png"))
 
         self.box = Gtk.VBox()
         self.window.add(self.box)

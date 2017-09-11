@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=0.1
+Name=CryptoHub miner
+GenericName=CryptoHub miner
+Comment=GUI app for mining using ccminer, sgminer and cpuminr
+Exec=python3 /usr/bin/cryptohubminer/miner.py
+TryExec=python3 /usr/bin/cryptohubminer/miner.py
+Icon=vlc
+Terminal=false
+Type=Application
+Categories=Internet,Mining;
+Keywords=Mining;
