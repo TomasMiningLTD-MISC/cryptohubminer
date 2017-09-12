@@ -1,0 +1,5 @@
+[10:27:58] Started sgminer 5.3.9                    
+[10:27:58] * using Jansson 2.6                    
+[10:27:59] Specified platform that does not exist                    
+[10:27:59] clDevicesNum returned error, no GPUs usable                    
+[10:27:59] All devices disabled, cannot mine!                    

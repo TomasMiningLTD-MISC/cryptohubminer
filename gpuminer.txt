@@ -1,48 +1,228 @@
-[09:34:37] Started sgminer 5.3.9                    
-[09:34:37] * using Jansson 2.6                    
-[09:34:37] CL Platform vendor: NVIDIA Corporation                    
-[09:34:37] CL Platform name: NVIDIA CUDA                    
-[09:34:37] CL Platform version: OpenCL 1.2 CUDA 8.0.0                    
-[09:34:37] Platform devices: 1                    
-[09:34:37] 	0	GeForce GTX 1060 3GB                    
-[09:34:37] Unable to load the AMD Display Library                    
-[09:34:37] WARNING: GPU_MAX_ALLOC_PERCENT is not specified!                    
-[09:34:37] WARNING: GPU_USE_SYNC_OBJECTS is not specified!                    
-[09:34:37] Probing for an alive pool                    
-[09:34:37] Testing cryptohub.online                    
-[09:34:38] cryptohub.online difficulty changed to 0.040                    
-[09:34:41] Stratum authorisation success for cryptohub.online                    
-[09:34:41] cryptohub.online alive                    
-[09:34:41] Startup GPU initialization... Using settings from pool cryptohub.online.                    
-[09:34:41] Startup Pool No = 0                    
-[09:34:41] Init GPU thread 0 GPU 0 virtual GPU 0                    
-[09:34:41] CL Platform vendor: NVIDIA Corporation                    
-[09:34:41] CL Platform name: NVIDIA CUDA                    
-[09:34:41] CL Platform version: OpenCL 1.2 CUDA 8.0.0                    
-[09:34:41] Platform devices: 1                    
-[09:34:41] 	0	GeForce GTX 1060 3GB                    
-[09:34:41] List of devices:                    
-[09:34:41] 	0	GeForce GTX 1060 3GB                    
-[09:34:41] Selected 0: GeForce GTX 1060 3GB                    
-[09:34:41] Maximum work size for this GPU (0) is 1024.                    
-[09:34:41] Your GPU (#0) has 9 compute units, and all AMD cards in the 7 series or newer (GCN cards) have 64 shaders per unit, this means it has 576 shaders.                    
-[09:34:41] GPU 0 PCI BUS 01                    
-[09:34:41] NVIDIA management enabled on GPU 0                    
-[09:34:41] Initialising kernel talkcoin-mod.cl                    
-[09:34:41] initCl() finished. Found GeForce GTX 1060 3GB                    
-[09:34:42] Work update message received                    
-[09:34:42] New block: fe47efcf8309e27a6ba753ff248a0fcf797a5efdc78f7c3593ef41be817efce0... diff 571                    
-(5s):4.025M (avg):10.34Mh/s | A:0  R:0  HW:0  WU:0.000/m          (5s):6.481M (avg):10.34Mh/s | A:0  R:0  HW:0  WU:0.000/m          [09:34:55] New best share: 0.120                    
-[09:34:55] Submitting share 5124998b to cryptohub.online                    
-[09:34:55] Pool 0 stratum share submission lag time 0 seconds                    
-[09:34:55] Pool 0 stratum share result lag time 0 seconds                    
-[09:34:55] Accepted 08512499 Diff 0.120/0.040 GPU 0                     
-(5s):7.980M (avg):10.34Mh/s | A:0  R:0  HW:0  WU:0.158/m          [09:34:59] Submitting share 807f4b3d to cryptohub.online                    
-[09:34:59] Pool 0 stratum share submission lag time 0 seconds                    
-[09:35:00] Pool 0 stratum share result lag time 1 seconds                    
-[09:35:00] Accepted 0f807f4b Diff 0.065/0.040 GPU 0                     
-(5s):8.891M (avg):10.33Mh/s | A:0  R:0  HW:0  WU:0.236/m          [09:35:05] Submitting share 821697da to cryptohub.online                    
-[09:35:05] Pool 0 stratum share submission lag time 0 seconds                    
-[09:35:06] Pool 0 stratum share result lag time 1 seconds                    
-[09:35:06] Accepted 0b821697 Diff 0.087/0.040 GPU 0                     
-(5s):9.452M (avg):10.33Mh/s | A:0  R:0  HW:0  WU:0.284/m          (5s):9.795M (avg):10.33Mh/s | A:0  R:0  HW:0  WU:0.236/m          (5s):10.01M (avg):10.33Mh/s | A:0  R:0  HW:0  WU:0.203/m          
+*** ccminer 2.2 for nVidia GPUs by tpruvot@github ***
+    Built with the nVidia CUDA Toolkit 8.0 64-bits
+
+  Originally based on Christian Buchner and Christian H. project
+  Include some algos from alexis78, djm34, sp, tsiv and klausT.
+
+BTC donation address: 1AJdfCpLWPNoAMDfHF1wD5y8VgKSSTHxPo (tpruvot)
+
+[2017-09-12 12:29:51][36m Starting on stratum+tcp://cryptohub.online:3032[0m
+[2017-09-12 12:29:51] NVML GPU monitoring enabled.[0m
+[2017-09-12 12:29:51] 1 miner thread started, using 'nist5' algorithm.[0m
+[2017-09-12 12:29:53][33m Stratum difficulty set to 0.04[0m
+[2017-09-12 12:29:53] GPU #0: Intensity set to 20, 1048576 cuda threads[0m
+[2017-09-12 12:29:53] GPU #0: MSI GTX 1060 3GB, 4266.44 kH/s[0m
+[2017-09-12 12:29:54][36m nist5 block 152450, diff 132.082[0m
+[2017-09-12 12:29:58] GPU #0: MSI GTX 1060 3GB, 21.26 MH/s[0m
+[2017-09-12 12:29:58][01;37m accepted: 1/1 (diff 0.068), 21.26 MH/s [32myes![0m
+[2017-09-12 12:29:59][01;37m accepted: 2/2 (diff 44.303), 21.47 MH/s [32myes![0m
+[2017-09-12 12:30:02] GPU #0: MSI GTX 1060 3GB, 21.14 MH/s[0m
+[2017-09-12 12:30:02][36m nist5 block 152451, diff 187.943[0m
+[2017-09-12 12:30:02][01;37m accepted: 2/3 (diff 0.358), 21.36 MH/s [31mbooooo[0m
+[2017-09-12 12:30:02][33m reject reason: job not found[0m
+[2017-09-12 12:30:28] GPU #0: MSI GTX 1060 3GB, 21.04 MH/s[0m
+[2017-09-12 12:30:28] GPU #0: 1513 MHz 320.07 kH/W 66W 36C FAN 49%[0m
+[2017-09-12 12:30:28][01;37m accepted: 3/4 (diff 0.049), 21.28 MH/s [32myes![0m
+[2017-09-12 12:30:39] GPU #0: MSI GTX 1060 3GB, 21.48 MH/s[0m
+[2017-09-12 12:30:39][01;37m accepted: 4/5 (diff 0.071), 21.32 MH/s [32myes![0m
+[2017-09-12 12:30:43][33m Stratum difficulty set to 0.048[0m
+[2017-09-12 12:30:43][36m nist5 block 152452, diff 272.823[0m
+[2017-09-12 12:31:09] GPU #0: MSI GTX 1060 3GB, 21.07 MH/s[0m
+[2017-09-12 12:31:09][01;37m accepted: 5/6 (diff 0.055), 21.28 MH/s [32myes![0m
+[2017-09-12 12:31:38][33m Stratum difficulty set to 0.0280976[0m
+[2017-09-12 12:31:59] GPU #0: MSI GTX 1060 3GB, 20.83 MH/s[0m
+[2017-09-12 12:31:59] GPU #0: 1502 MHz 318.79 kH/W 66W 46C FAN 49%[0m
+[2017-09-12 12:32:01][01;37m accepted: 6/7 (diff 0.164), 21.23 MH/s [32myes![0m
+[2017-09-12 12:32:04] GPU #0: MSI GTX 1060 3GB, 20.87 MH/s[0m
+[2017-09-12 12:32:04][01;37m accepted: 7/8 (diff 0.269), 21.19 MH/s [32myes![0m
+[2017-09-12 12:32:05][01;37m accepted: 8/9 (diff 0.079), 21.12 MH/s [32myes![0m
+[2017-09-12 12:32:06][01;37m accepted: 9/10 (diff 0.029), 21.05 MH/s [32myes![0m
+[2017-09-12 12:32:12][33m Stratum difficulty set to 0.00661119[0m
+[2017-09-12 12:32:12][36m nist5 block 152453, diff 299.444[0m
+[2017-09-12 12:32:13] GPU #0: MSI GTX 1060 3GB, 21.12 MH/s[0m
+[2017-09-12 12:32:13][01;37m accepted: 10/11 (diff 0.020), 21.06 MH/s [32myes![0m
+[2017-09-12 12:32:18] GPU #0: MSI GTX 1060 3GB, 20.86 MH/s[0m
+[2017-09-12 12:32:18][01;37m accepted: 11/12 (diff 0.011), 21.04 MH/s [32myes![0m
+[2017-09-12 12:32:21][01;37m accepted: 12/13 (diff 0.016), 21.02 MH/s [32myes![0m
+[2017-09-12 12:32:21][01;37m accepted: 13/14 (diff 0.014), 20.95 MH/s [32myes![0m
+[2017-09-12 12:32:22] GPU #0: MSI GTX 1060 3GB, 21.16 MH/s[0m
+[2017-09-12 12:32:23][01;37m accepted: 14/15 (diff 0.008), 20.96 MH/s [32myes![0m
+[2017-09-12 12:32:24][01;37m accepted: 15/16 (diff 0.016), 20.95 MH/s [32myes![0m
+[2017-09-12 12:32:24][01;37m accepted: 16/17 (diff 0.019), 20.95 MH/s [32myes![0m
+[2017-09-12 12:32:25][01;37m accepted: 17/18 (diff 0.021), 20.96 MH/s [32myes![0m
+[2017-09-12 12:32:26][01;37m accepted: 18/19 (diff 0.008), 20.94 MH/s [32myes![0m
+[2017-09-12 12:32:26][01;37m accepted: 19/20 (diff 0.008), 20.94 MH/s [32myes![0m
+[2017-09-12 12:32:28] GPU #0: MSI GTX 1060 3GB, 20.53 MH/s[0m
+[2017-09-12 12:32:28][01;37m accepted: 20/21 (diff 0.008), 20.97 MH/s [32myes![0m
+[2017-09-12 12:32:29][01;37m accepted: 21/22 (diff 0.211), 20.97 MH/s [32myes![0m
+[2017-09-12 12:32:29][01;37m accepted: 22/23 (diff 0.020), 20.98 MH/s [32myes![0m
+[2017-09-12 12:32:34] GPU #0: MSI GTX 1060 3GB, 20.87 MH/s[0m
+[2017-09-12 12:32:34][01;37m accepted: 23/24 (diff 0.010), 20.97 MH/s [32myes![0m
+[2017-09-12 12:32:35][01;37m accepted: 24/25 (diff 0.011), 21.03 MH/s [32myes![0m
+[2017-09-12 12:32:35][01;37m accepted: 25/26 (diff 0.222), 21.03 MH/s [32myes![0m
+[2017-09-12 12:32:36][01;37m accepted: 26/27 (diff 0.028), 21.02 MH/s [32myes![0m
+[2017-09-12 12:32:37][01;37m accepted: 27/28 (diff 0.018), 21.01 MH/s [32myes![0m
+[2017-09-12 12:32:38] GPU #0: MSI GTX 1060 3GB, 20.80 MH/s[0m
+[2017-09-12 12:32:38][01;37m accepted: 28/29 (diff 0.009), 21.01 MH/s [32myes![0m
+[2017-09-12 12:32:41][01;37m accepted: 29/30 (diff 0.011), 21.00 MH/s [32myes![0m
+[2017-09-12 12:32:42] GPU #0: MSI GTX 1060 3GB, 20.90 MH/s[0m
+[2017-09-12 12:32:42][01;37m accepted: 30/31 (diff 0.018), 20.98 MH/s [32myes![0m
+[2017-09-12 12:32:44][01;37m accepted: 31/32 (diff 0.016), 20.96 MH/s [32myes![0m
+[2017-09-12 12:32:45][01;37m accepted: 32/33 (diff 0.009), 20.94 MH/s [32myes![0m
+[2017-09-12 12:32:46][01;37m accepted: 33/34 (diff 0.011), 20.96 MH/s [32myes![0m
+[2017-09-12 12:32:46] GPU #0: MSI GTX 1060 3GB, 21.04 MH/s[0m
+[2017-09-12 12:32:47][01;37m accepted: 34/35 (diff 0.012), 20.95 MH/s [32myes![0m
+[2017-09-12 12:32:47][01;37m accepted: 35/36 (diff 0.504), 20.89 MH/s [32myes![0m
+[2017-09-12 12:32:48][01;37m accepted: 36/37 (diff 0.010), 20.90 MH/s [32myes![0m
+[2017-09-12 12:32:49][01;37m accepted: 37/38 (diff 0.019), 20.90 MH/s [32myes![0m
+[2017-09-12 12:32:50][01;37m accepted: 38/39 (diff 0.069), 20.90 MH/s [32myes![0m
+[2017-09-12 12:32:50] GPU #0: MSI GTX 1060 3GB, 20.77 MH/s[0m
+[2017-09-12 12:32:51][01;37m accepted: 39/40 (diff 0.011), 20.96 MH/s [32myes![0m
+[2017-09-12 12:32:51][01;37m accepted: 40/41 (diff 0.015), 20.93 MH/s [32myes![0m
+[2017-09-12 12:32:51][01;37m accepted: 41/42 (diff 0.014), 20.93 MH/s [32myes![0m
+[2017-09-12 12:32:52][01;37m accepted: 42/43 (diff 0.018), 20.93 MH/s [32myes![0m
+[2017-09-12 12:32:55] GPU #0: MSI GTX 1060 3GB, 20.63 MH/s[0m
+[2017-09-12 12:32:55][01;37m accepted: 43/44 (diff 0.058), 20.92 MH/s [32myes![0m
+[2017-09-12 12:32:56][01;37m accepted: 44/45 (diff 0.014), 20.95 MH/s [32myes![0m
+[2017-09-12 12:32:58][01;37m accepted: 45/46 (diff 0.028), 20.95 MH/s [32myes![0m
+[2017-09-12 12:32:58][01;37m accepted: 46/47 (diff 0.035), 20.95 MH/s [32myes![0m
+[2017-09-12 12:32:59] GPU #0: MSI GTX 1060 3GB, 20.49 MH/s[0m
+[2017-09-12 12:32:59][01;37m accepted: 47/48 (diff 0.008), 20.94 MH/s [32myes![0m
+[2017-09-12 12:33:00][01;37m accepted: 48/49 (diff 0.013), 20.91 MH/s [32myes![0m
+[2017-09-12 12:33:03][01;37m accepted: 49/50 (diff 0.051), 20.93 MH/s [32myes![0m
+[2017-09-12 12:33:03] GPU #0: MSI GTX 1060 3GB, 20.68 MH/s[0m
+[2017-09-12 12:33:04][01;37m accepted: 50/51 (diff 0.086), 20.94 MH/s [32myes![0m
+[2017-09-12 12:33:04][01;37m accepted: 51/52 (diff 0.007), 20.90 MH/s [32myes![0m
+[2017-09-12 12:33:07][33m Stratum difficulty set to 0.0721221[0m
+[2017-09-12 12:33:08] GPU #0: MSI GTX 1060 3GB, 20.90 MH/s[0m
+[2017-09-12 12:33:38] GPU #0: MSI GTX 1060 3GB, 20.94 MH/s[0m
+[2017-09-12 12:33:38] GPU #0: 1490 MHz 312.86 kH/W 66W 51C FAN 51%[0m
+[2017-09-12 12:33:38][01;37m accepted: 52/53 (diff 0.219), 20.89 MH/s [32myes![0m
+[2017-09-12 12:33:50] GPU #0: MSI GTX 1060 3GB, 20.64 MH/s[0m
+[2017-09-12 12:33:51][01;37m accepted: 53/54 (diff 0.495), 20.84 MH/s [32myes![0m
+[2017-09-12 12:33:57] GPU #0: MSI GTX 1060 3GB, 20.92 MH/s[0m
+[2017-09-12 12:33:57][01;37m accepted: 54/55 (diff 0.080), 20.84 MH/s [32myes![0m
+[2017-09-12 12:33:58][01;37m accepted: 55/56 (diff 0.161), 20.83 MH/s [32myes![0m
+[2017-09-12 12:34:04][36m nist5 block 152454, diff 233.334[0m
+[2017-09-12 12:34:27][36m nist5 block 152455, diff 301.078[0m
+[2017-09-12 12:34:30] GPU #0: MSI GTX 1060 3GB, 20.57 MH/s[0m
+[2017-09-12 12:34:31][01;37m accepted: 56/57 (diff 0.126), 20.83 MH/s [32myes![0m
+[2017-09-12 12:34:50] GPU #0: MSI GTX 1060 3GB, 20.75 MH/s[0m
+[2017-09-12 12:34:50] GPU #0: 1489 MHz 313.50 kH/W 66W 53C FAN 52%[0m
+[2017-09-12 12:34:50][01;37m accepted: 57/58 (diff 0.194), 20.83 MH/s [32myes![0m
+[2017-09-12 12:35:20] GPU #0: MSI GTX 1060 3GB, 20.58 MH/s[0m
+[2017-09-12 12:35:20][01;37m accepted: 58/59 (diff 0.089), 20.82 MH/s [32myes![0m
+[2017-09-12 12:35:22][33m Stratum difficulty set to 0.0288488[0m
+[2017-09-12 12:35:22][36m nist5 block 152456, diff 364.947[0m
+[2017-09-12 12:35:25] GPU #0: MSI GTX 1060 3GB, 20.52 MH/s[0m
+[2017-09-12 12:35:25][01;37m accepted: 59/60 (diff 0.037), 20.81 MH/s [32myes![0m
+[2017-09-12 12:35:29] GPU #0: MSI GTX 1060 3GB, 20.57 MH/s[0m
+[2017-09-12 12:35:29][01;37m accepted: 60/61 (diff 0.067), 20.80 MH/s [32myes![0m
+[2017-09-12 12:35:31][01;37m accepted: 61/62 (diff 0.173), 20.80 MH/s [32myes![0m
+[2017-09-12 12:35:34] GPU #0: MSI GTX 1060 3GB, 20.64 MH/s[0m
+[2017-09-12 12:35:34][01;37m accepted: 62/63 (diff 0.601), 20.76 MH/s [32myes![0m
+[2017-09-12 12:35:35][01;37m accepted: 63/64 (diff 0.039), 20.79 MH/s [32myes![0m
+[2017-09-12 12:35:41] GPU #0: MSI GTX 1060 3GB, 20.51 MH/s[0m
+[2017-09-12 12:35:41][01;37m accepted: 64/65 (diff 0.090), 20.82 MH/s [32myes![0m
+[2017-09-12 12:35:45] GPU #0: MSI GTX 1060 3GB, 20.76 MH/s[0m
+[2017-09-12 12:35:45][01;37m accepted: 65/66 (diff 0.048), 20.81 MH/s [32myes![0m
+[2017-09-12 12:35:51][33m Stratum difficulty set to 0.0989103[0m
+[2017-09-12 12:35:51][36m nist5 block 152457, diff 464.247[0m
+[2017-09-12 12:36:06] GPU #0: MSI GTX 1060 3GB, 20.75 MH/s[0m
+[2017-09-12 12:36:06] GPU #0: 1489 MHz 311.60 kH/W 66W 54C FAN 52%[0m
+[2017-09-12 12:36:06][01;37m accepted: 66/67 (diff 0.102), 20.81 MH/s [32myes![0m
+[2017-09-12 12:36:15] GPU #0: MSI GTX 1060 3GB, 20.62 MH/s[0m
+[2017-09-12 12:36:15][01;37m accepted: 67/68 (diff 0.693), 20.78 MH/s [32myes![0m
+[2017-09-12 12:36:35][36m nist5 block 152458, diff 679.386[0m
+[2017-09-12 12:36:38] GPU #0: MSI GTX 1060 3GB, 20.39 MH/s[0m
+[2017-09-12 12:36:38][01;37m accepted: 68/69 (diff 0.730), 20.77 MH/s [32myes![0m
+[2017-09-12 12:36:45] GPU #0: MSI GTX 1060 3GB, 20.79 MH/s[0m
+[2017-09-12 12:36:45][01;37m accepted: 69/70 (diff 0.114), 20.74 MH/s [32myes![0m
+[2017-09-12 12:36:52] GPU #0: MSI GTX 1060 3GB, 21.26 MH/s[0m
+[2017-09-12 12:36:52][01;37m accepted: 70/71 (diff 0.166), 20.77 MH/s [32myes![0m
+[2017-09-12 12:37:01][33m Stratum difficulty set to 0.0832929[0m
+[2017-09-12 12:37:01][36m nist5 block 152459, diff 861.194[0m
+[2017-09-12 12:37:16] GPU #0: MSI GTX 1060 3GB, 21.13 MH/s[0m
+[2017-09-12 12:37:16] GPU #0: 1482 MHz 310.51 kH/W 66W 54C FAN 53%[0m
+[2017-09-12 12:37:16][01;37m accepted: 71/72 (diff 0.401), 20.78 MH/s [32myes![0m
+[2017-09-12 12:37:20][01;37m accepted: 72/73 (diff 5.639), 20.78 MH/s [32myes![0m
+[2017-09-12 12:37:25][36m nist5 block 152460, diff 1169.924[0m
+[2017-09-12 12:37:42] GPU #0: MSI GTX 1060 3GB, 20.73 MH/s[0m
+[2017-09-12 12:37:43][01;37m accepted: 73/74 (diff 0.313), 20.78 MH/s [32myes![0m
+[2017-09-12 12:37:47] GPU #0: MSI GTX 1060 3GB, 21.20 MH/s[0m
+[2017-09-12 12:37:48][01;37m accepted: 74/75 (diff 7.781), 20.78 MH/s [32myes![0m
+[2017-09-12 12:38:40] GPU #0: MSI GTX 1060 3GB, 20.76 MH/s[0m
+[2017-09-12 12:38:40] GPU #0: 1485 MHz 310.65 kH/W 66W 55C FAN 53%[0m
+[2017-09-12 12:38:52] GPU #0: MSI GTX 1060 3GB, 20.71 MH/s[0m
+[2017-09-12 12:38:52][01;37m accepted: 75/76 (diff 0.171), 20.79 MH/s [32myes![0m
+[2017-09-12 12:39:15][33m Stratum difficulty set to 0.0522134[0m
+[2017-09-12 12:39:25] GPU #0: MSI GTX 1060 3GB, 20.66 MH/s[0m
+[2017-09-12 12:39:43] GPU #0: MSI GTX 1060 3GB, 20.79 MH/s[0m
+[2017-09-12 12:39:43] GPU #0: 1484 MHz 313.89 kH/W 66W 55C FAN 53%[0m
+[2017-09-12 12:39:43][01;37m accepted: 76/77 (diff 0.179), 20.78 MH/s [32myes![0m
+[2017-09-12 12:40:00] GPU #0: MSI GTX 1060 3GB, 20.81 MH/s[0m
+[2017-09-12 12:40:00][01;37m accepted: 77/78 (diff 0.148), 20.79 MH/s [32myes![0m
+[2017-09-12 12:40:02][01;37m accepted: 78/79 (diff 0.225), 20.79 MH/s [32myes![0m
+[2017-09-12 12:40:10][33m Stratum difficulty set to 0.0122855[0m
+[2017-09-12 12:40:12] GPU #0: MSI GTX 1060 3GB, 20.44 MH/s[0m
+[2017-09-12 12:40:14][01;37m accepted: 79/80 (diff 0.013), 20.75 MH/s [32myes![0m
+[2017-09-12 12:40:16] GPU #0: MSI GTX 1060 3GB, 20.40 MH/s[0m
+[2017-09-12 12:40:17][01;37m accepted: 80/81 (diff 0.041), 20.75 MH/s [32myes![0m
+[2017-09-12 12:40:22] GPU #0: MSI GTX 1060 3GB, 20.88 MH/s[0m
+[2017-09-12 12:40:22][01;37m accepted: 81/82 (diff 0.013), 20.74 MH/s [32myes![0m
+[2017-09-12 12:40:23][01;37m accepted: 82/83 (diff 0.053), 20.77 MH/s [32myes![0m
+[2017-09-12 12:40:24][01;37m accepted: 83/84 (diff 0.063), 20.84 MH/s [32myes![0m
+[2017-09-12 12:40:24][01;37m accepted: 84/85 (diff 0.066), 20.84 MH/s [32myes![0m
+[2017-09-12 12:40:25][01;37m accepted: 85/86 (diff 0.038), 20.87 MH/s [32myes![0m
+[2017-09-12 12:40:28] GPU #0: MSI GTX 1060 3GB, 21.21 MH/s[0m
+[2017-09-12 12:40:28][01;37m accepted: 86/87 (diff 0.223), 20.89 MH/s [32myes![0m
+[2017-09-12 12:40:31][01;37m accepted: 87/88 (diff 0.014), 20.92 MH/s [32myes![0m
+[2017-09-12 12:40:31][01;37m accepted: 88/89 (diff 0.012), 20.96 MH/s [32myes![0m
+[2017-09-12 12:40:32][01;37m accepted: 89/90 (diff 0.018), 20.96 MH/s [32myes![0m
+[2017-09-12 12:40:32][01;37m accepted: 90/91 (diff 0.013), 20.96 MH/s [32myes![0m
+[2017-09-12 12:40:35] GPU #0: MSI GTX 1060 3GB, 21.34 MH/s[0m
+[2017-09-12 12:40:35][01;37m accepted: 91/92 (diff 0.053), 20.99 MH/s [32myes![0m
+[2017-09-12 12:40:39] GPU #0: MSI GTX 1060 3GB, 20.63 MH/s[0m
+[2017-09-12 12:40:39][01;37m accepted: 92/93 (diff 0.013), 20.98 MH/s [32myes![0m
+[2017-09-12 12:40:47] GPU #0: MSI GTX 1060 3GB, 20.77 MH/s[0m
+[2017-09-12 12:40:47] GPU #0: 1487 MHz 313.76 kH/W 66W 55C FAN 53%[0m
+[2017-09-12 12:40:47][01;37m accepted: 93/94 (diff 0.081), 20.99 MH/s [32myes![0m
+[2017-09-12 12:40:48][01;37m accepted: 94/95 (diff 0.069), 21.00 MH/s [32myes![0m
+[2017-09-12 12:40:49][01;37m accepted: 95/96 (diff 0.016), 21.00 MH/s [32myes![0m
+[2017-09-12 12:40:51] GPU #0: MSI GTX 1060 3GB, 20.73 MH/s[0m
+[2017-09-12 12:40:51][01;37m accepted: 96/97 (diff 0.020), 20.99 MH/s [32myes![0m
+[2017-09-12 12:40:57] GPU #0: MSI GTX 1060 3GB, 20.78 MH/s[0m
+[2017-09-12 12:40:57][01;37m accepted: 97/98 (diff 0.021), 20.98 MH/s [32myes![0m
+[2017-09-12 12:40:59][01;37m accepted: 98/99 (diff 0.021), 20.96 MH/s [32myes![0m
+[2017-09-12 12:41:04] GPU #0: MSI GTX 1060 3GB, 20.69 MH/s[0m
+[2017-09-12 12:41:04][01;37m accepted: 99/100 (diff 0.023), 20.96 MH/s [32myes![0m
+[2017-09-12 12:41:05][33m Stratum difficulty set to 0.0402071[0m
+[2017-09-12 12:41:05][01;37m accepted: 100/101 (diff 0.046), 20.96 MH/s [32myes![0m
+[2017-09-12 12:41:07][33m Enabled stratum stale jobs workaround[0m
+[2017-09-12 12:41:07][01;37m accepted: 101/102 (diff 0.101), 20.97 MH/s [32myes![0m
+[2017-09-12 12:41:17] GPU #0: MSI GTX 1060 3GB, 20.59 MH/s[0m
+[2017-09-12 12:41:17][01;37m accepted: 102/103 (diff 0.206), 20.97 MH/s [32myes![0m
+[2017-09-12 12:41:19][01;37m accepted: 103/104 (diff 0.046), 20.97 MH/s [32myes![0m
+[2017-09-12 12:41:28] GPU #0: MSI GTX 1060 3GB, 20.65 MH/s[0m
+[2017-09-12 12:41:28][01;37m accepted: 104/105 (diff 0.051), 20.97 MH/s [32myes![0m
+[2017-09-12 12:41:36] GPU #0: MSI GTX 1060 3GB, 20.79 MH/s[0m
+[2017-09-12 12:41:36][01;37m accepted: 105/106 (diff 0.092), 20.97 MH/s [32myes![0m
+[2017-09-12 12:41:42] GPU #0: MSI GTX 1060 3GB, 20.58 MH/s[0m
+[2017-09-12 12:41:42][01;37m accepted: 106/107 (diff 0.045), 20.96 MH/s [32myes![0m
+[2017-09-12 12:41:46][01;37m accepted: 107/108 (diff 0.046), 20.95 MH/s [32myes![0m
+[2017-09-12 12:41:48] GPU #0: MSI GTX 1060 3GB, 20.64 MH/s[0m
+[2017-09-12 12:41:48][01;37m accepted: 108/109 (diff 0.107), 20.96 MH/s [32myes![0m
+[2017-09-12 12:41:53] GPU #0: MSI GTX 1060 3GB, 20.47 MH/s[0m
+[2017-09-12 12:41:53] GPU #0: 1491 MHz 317.41 kH/W 66W 55C FAN 53%[0m
+[2017-09-12 12:41:53][01;37m accepted: 109/110 (diff 0.250), 20.96 MH/s [32myes![0m
+[2017-09-12 12:41:58] GPU #0: MSI GTX 1060 3GB, 20.26 MH/s[0m
+[2017-09-12 12:41:59][01;37m accepted: 110/111 (diff 10.091), 20.88 MH/s [32myes![0m
+[2017-09-12 12:41:59][01;37m accepted: 111/112 (diff 0.052), 20.88 MH/s [32myes![0m
+[2017-09-12 12:42:00][33m Stratum difficulty set to 0.0771977[0m
+[2017-09-12 12:42:10] GPU #0: MSI GTX 1060 3GB, 20.45 MH/s[0m
+[2017-09-12 12:42:20] GPU #0: MSI GTX 1060 3GB, 20.23 MH/s[0m
+[2017-09-12 12:42:20][01;37m accepted: 112/113 (diff 0.097), 20.79 MH/s [32myes![0m
+[2017-09-12 12:42:22][01;37m accepted: 113/114 (diff 0.127), 20.75 MH/s [32myes![0m
+[2017-09-12 12:42:53] GPU #0: MSI GTX 1060 3GB, 20.53 MH/s[0m
+[2017-09-12 12:42:54][01;37m accepted: 114/115 (diff 0.130), 20.73 MH/s [32myes![0m
+[2017-09-12 12:42:55][33m Stratum difficulty set to 0.0561438[0m

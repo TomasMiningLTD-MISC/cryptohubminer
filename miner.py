@@ -15,13 +15,46 @@ import telnetlib
 import datetime
 import re
 import decimal
+import sys
+
+log_f = open('log.txt', 'w')
+#sys.stdout = log_f
+
+pools_cpu = {
+    "Q2C": ["cryptohub.online:3042","qubit"],
+}
 
 
 pools_gpu = {
-    "XLR": ["cryptohub.online:3032","nist5","nist5"],
-    "WYV": ["cryptohub.online:3052","nist5","nist5"],
-    "Q2C": ["cryptohub.online:3042","qubit","qubitcoin"],
+    "XLR": ["cryptohub.online:3032","nist5"],
+    "WYV": ["cryptohub.online:3052","nist5"],
+    "Q2C": ["cryptohub.online:3042","qubit"],
+    "ONION": ["cryptohub.online:3101","x11"],
 }
+
+#radeon
+pools_gpu2 = {
+    "XLR": ["cryptohub.online:3032","nist5"],
+    "WYV": ["cryptohub.online:3052","nist5"],
+    "Q2C": ["cryptohub.online:3042","qubitcoin"],
+}
+
+def get_data_dir():
+    print(sys.platform)
+    if sys.platform == 'linux2' or sys.platform == 'linux':
+        dat_dir = os.path.expanduser("~") + "/.cryptohubminer"
+    elif sys.platform == "win32" or sys.platform == "cygwin":
+        dat_dir = os.getenv('APPDATA')
+    print(dat_dir)
+
+    if not os.path.exists(dat_dir):
+        #os.makedirs(dat_dir)
+        pass
+
+    return dat_dir
+
+
+dita_dir = get_data_dir()
 
 
 class gui():
@@ -29,12 +62,21 @@ class gui():
     nvidia = False
     radeon = False
     old_cpu = False
+    started_gpu_nvidia = False
+    started_gpu_radeon = False
     started_gpu = False
     started_gpu_title = None
     started_gpu_hs = 0
+    started_gpu_hs_upd = None
+    started_gpu2 = False
+    started_gpu2_title = None
+    started_gpu2_hs = 0
+    started_gpu2_hs_upd = None
+    started_gpu_title3 = None
     started_cpu = False
     started_cpu_title = None
     started_cpu_hs = 0
+    started_cpu_hs_upd = None
     cpu_threads = 1
     cpu_coin = None
     gpu_coin = None
@@ -56,6 +98,7 @@ class gui():
                 return True
         self.kill_miner("gpu")
         self.kill_miner("cpu")
+        log_f.close()
         Gtk.main_quit()
         return False
 
@@ -121,6 +164,26 @@ class gui():
 
         self.label_rejected_gpu = Gtk.Label('')
         self.box_c2.pack_start(self.label_rejected_gpu, True, True, 0)
+
+
+
+        self.fr3 = Gtk.Frame()
+        self.hbox_status.pack_start(self.fr3, True, True, 10)
+
+        self.box_c3 = Gtk.VBox()
+        self.hbox_status.pack_start(self.box_c3, False, True, 30)
+
+        self.label_title_gpu3 = Gtk.Label('')
+        self.box_c3.pack_start(self.label_title_gpu3, True, True, 0)
+
+        self.label_hashrate_gpu3 = Gtk.Label('')
+        self.box_c3.pack_start(self.label_hashrate_gpu3, True, True, 0)
+
+        self.label_accepted_gpu3 = Gtk.Label('')
+        self.box_c3.pack_start(self.label_accepted_gpu3, True, True, 0)
+
+        self.label_rejected_gpu3 = Gtk.Label('')
+        self.box_c3.pack_start(self.label_rejected_gpu3, True, True, 0)
 
 
 
@@ -229,6 +292,10 @@ class gui():
             self.combobox_threads = Gtk.ComboBoxText()
             for i in range(self.cpu_threads):
                 self.combobox_threads.append_text(str(i+1))
+            try:
+                self.combobox_threads.set_active(0)
+            except:
+                pass
             self.cpuhbox.pack_start(self.combobox_threads, True, True, 10)
 
 
@@ -247,9 +314,9 @@ class gui():
 
 
 
-        if self.nvidia or self.radeon:
+        if self.nvidia:
 
-            self.label_hashrate = Gtk.Label('Select a coin to mine on GPU:')
+            self.label_hashrate = Gtk.Label('Select a coin to mine on Nvidia GPU(s):')
             self.box.pack_start(self.label_hashrate, True, True, 20)
 
             self.box_nv = Gtk.Box()
@@ -267,10 +334,48 @@ class gui():
             self.gpu_button.connect('clicked', self.on_gpu_button_clicked)
             self.hbox.pack_start(self.gpu_button, True, True, 10)
 
-            self.gpu_button2 = Gtk.Button(label='Stop')
-            self.gpu_button2.set_sensitive(False)
+            self.gpu_buttonoff = Gtk.Button(label='Stop')
+            self.gpu_buttonoff.set_sensitive(False)
+            self.gpu_buttonoff.connect('clicked', self.on_gpu_button_off_clicked)
+            self.hbox.pack_start(self.gpu_buttonoff, True, True, 10)
+
+
+        if self.radeon:
+
+            self.label_hashrate2 = Gtk.Label('Select a coin to mine on Radeon GPU(s):')
+            self.box.pack_start(self.label_hashrate2, True, True, 20)
+
+            self.box_nv2 = Gtk.Box()
+            self.box.pack_start(self.box_nv2, True, True, 20)
+
+            self.combobox_gpu2 = Gtk.ComboBoxText()
+            for k, el in pools_gpu2.items():
+                self.combobox_gpu2.append_text(k)
+            self.box_nv2.pack_start(self.combobox_gpu2, True, True, 10)
+
+            self.combobox_gpu2_platform = Gtk.ComboBoxText()
+            self.combobox_gpu2_platform.append_text("Platform 0")
+            self.combobox_gpu2_platform.append_text("Platform 1")
+            self.combobox_gpu2_platform.append_text("Platform 2")
+            self.combobox_gpu2_platform.set_active(0)
+            self.box_nv2.pack_start(self.combobox_gpu2_platform, True, True, 10)
+            self.label_sel_platform = Gtk.Label('If mining doesnt work try to choose another platform')
+            self.box_nv2.pack_start(self.label_sel_platform, True, True, 10)
+
+
+
+            self.hbox2 = Gtk.HBox()
+            self.box.pack_start(self.hbox2, True, True, 10)
+
+            self.gpu_button2 = Gtk.Button(label='Start')
             self.gpu_button2.connect('clicked', self.on_gpu_button_clicked2)
-            self.hbox.pack_start(self.gpu_button2, True, True, 10)
+            self.hbox2.pack_start(self.gpu_button2, True, True, 10)
+
+            self.gpu_button2off = Gtk.Button(label='Stop')
+            self.gpu_button2off.set_sensitive(False)
+            self.gpu_button2off.connect('clicked', self.on_gpu_button_off2_clicked)
+            self.hbox2.pack_start(self.gpu_button2off, True, True, 10)
+
 
 
 
@@ -298,7 +403,16 @@ class gui():
             "accepted": 0,
             "rejected": 0
         }
-        last_line = str(self.open_log(type + "miner.txt"))
+
+        import os.path, time
+        filename = type + "miner.txt"
+        last_change = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
+        dif = datetime.datetime.now() - last_change
+        if dif > datetime.timedelta(seconds=30):
+            return res_data_all
+
+
+        last_line = str(self.open_log(filename))
         print(last_line)
         if "[S/A/T]" in last_line:
             # Alexis ccminer
@@ -321,7 +435,7 @@ class gui():
             res_data_all["rejected"] = int(shares[1]) - int(shares[0])
         elif "accepted:" in last_line:
             # common ccminer
-            print("common ccminer")
+            print("common ccminer x2")
             els = last_line.split("accepted:")[1].split(",")
             print(els)
             shares = els[0].strip().split(" ")[0].split("/")
@@ -345,16 +459,24 @@ class gui():
         return res_data_all
 
     def upd(self):
+        print("upd")
         if self.started_gpu:
             self.label_status.set_markup('<span size="xx-large" foreground="green">Running</span>')
             try:
                 res_data = self.get_log("gpu")
                 self.label_title_gpu.set_markup('<span size="large" foreground="green">'+ str(self.started_gpu_title) +'</span>')
                 if self.started_gpu_hs != 0 and res_data["hashrate"] == 0:
-                    self.label_hashrate_gpu.set_label(self.started_gpu_hs)
+                    if not self.started_gpu_hs_upd:
+                        self.label_hashrate_gpu.set_label("")
+                    else:
+                        if self.started_gpu_hs_upd < datetime.datetime.now() - datetime.timedelta(seconds=30):
+                            self.label_hashrate_gpu.set_label("")
+                        else:
+                            self.label_hashrate_gpu.set_label(self.started_gpu_hs)
                 else:
                     self.label_hashrate_gpu.set_label(str(res_data["hashrate"]))
                     self.started_gpu_hs = str(res_data["hashrate"])
+                    self.started_gpu_hs_upd = datetime.datetime.now()
                 if res_data["accepted"] > 0 or res_data["rejected"] > 0:
                     self.label_accepted_gpu.set_label("Accepted:" + str(res_data["accepted"]))
                     self.label_rejected_gpu.set_label("Rejected:" + str(res_data["rejected"]))
@@ -364,6 +486,40 @@ class gui():
         else:
             self.label_title_gpu.set_markup('<span size="large" foreground="green"></span>')
             self.label_hashrate_gpu.set_label("")
+            self.label_accepted_gpu.set_label("")
+            self.label_rejected_gpu.set_label("")
+
+
+        if self.started_gpu2:
+            print("gpu 2")
+            self.label_status.set_markup('<span size="xx-large" foreground="green">Running</span>')
+            try:
+                res_data = self.get_log("gpu2")
+                self.label_title_gpu3.set_markup('<span size="large" foreground="green">'+ str(self.started_gpu2_title) +'</span>')
+                if self.started_gpu2_hs != 0 and res_data["hashrate"] == 0:
+                    if not self.started_gpu2_hs_upd:
+                        self.label_hashrate_gpu3.set_label("")
+                    else:
+                        if self.started_gpu2_hs_upd < datetime.datetime.now() - datetime.timedelta(seconds=30):
+                            self.label_hashrate_gpu3.set_label("")
+                        else:
+                            self.label_hashrate_gpu3.set_label(self.started_gpu2_hs)
+                else:
+                    self.label_hashrate_gpu3.set_label(str(res_data["hashrate"]))
+                    self.started_gpu2_hs_upd = datetime.datetime.now()
+                    self.started_gpu2_hs = str(res_data["hashrate"])
+                if res_data["accepted"] > 0 or res_data["rejected"] > 0:
+                    self.label_accepted_gpu3.set_label("Accepted:" + str(res_data["accepted"]))
+                    self.label_rejected_gpu3.set_label("Rejected:" + str(res_data["rejected"]))
+
+            except Exception as e:
+                print(e)
+        else:
+            self.label_title_gpu3.set_markup('<span size="large" foreground="green"></span>')
+            self.label_hashrate_gpu3.set_label("")
+            self.label_accepted_gpu3.set_label("")
+            self.label_rejected_gpu3.set_label("")
+
 
         if self.started_cpu:
             self.label_title_cpu.set_markup('<span size="large" foreground="green">Q2C</span>')
@@ -373,9 +529,17 @@ class gui():
                 self.label_hashrate_cpu.set_label(str(res_data["hashrate"]))
                 #print("hh", self.started_cpu_hs, res_data["hashrate"], self.started_cpu_hs != 0, res_data["hashrate"] == 0)
                 if self.started_cpu_hs != 0 and res_data["hashrate"] == 0:
-                    self.label_hashrate_cpu.set_label(self.started_cpu_hs)
+                    if not self.started_cpu_hs_upd:
+                        self.label_hashrate_cpu.set_label("")
+                    else:
+                        if self.started_cpu_hs_upd < datetime.datetime.now() - datetime.timedelta(seconds=30):
+                            self.label_hashrate_cpu.set_label("")
+                        else:
+                            self.label_hashrate_cpu.set_label(self.started_cpu_hs)
+
                 else:
                     self.label_hashrate_cpu.set_label(str(res_data["hashrate"]))
+                    self.started_cpu_hs_upd = datetime.datetime.now()
                     self.started_cpu_hs = str(res_data["hashrate"])
                 if res_data["accepted"] > 0 or res_data["rejected"] > 0:
                     self.label_accepted_cpu.set_label("Accepted:" + str(res_data["accepted"]))
@@ -386,15 +550,20 @@ class gui():
         else:
             self.label_title_cpu.set_markup('<span size="large" foreground="green"></span>')
             self.label_hashrate_cpu.set_label("")
+            self.label_accepted_cpu.set_label("")
+            self.label_rejected_cpu.set_label("")
 
 
-        if self.started_gpu or self.started_cpu:
+        if self.started_gpu or self.started_gpu2 or self.started_cpu:
             self.img.set_from_file(self.dir + "/imgs/run.png")
             self.label_status.set_markup('<span size="xx-large" foreground="green">Running</span>')
         else:
             self.img.set_from_file(self.dir + "/imgs/stop.png")
             self.label_status.set_markup('<span size="xx-large" foreground="red">Idle</span>')
         GObject.timeout_add(1000, self.upd)
+
+
+
 
     def on_gpu_button_clicked(self, widget):
         key = self.combobox_gpu.get_active_text()
@@ -412,36 +581,55 @@ class gui():
         print(pool)
         if self.nvidia:
             prc = self.dir + "/ccminer/ccminer -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
+            subprocess.call(prc + " > gpuminer.txt &", shell=True)
 
-        if self.radeon:
-            prc = self.dir + "/sgminer/sgminer --algorithm " + pool[2] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v"
-            if self.is_linux:
-                #prc =  "export GPU_USE_SYNC_OBJECTS=1 & export GPU_MAX_ALLOC_PERCENT=100 & " + prc
-                pass
-            print(prc)
+            self.started_gpu_title = key
+            self.started_gpu = True
 
-        subprocess.call(prc + " > gpuminer.txt &", shell=True)
-        # /bin/sh: 1: /home/alex90/PycharmProjects/cryptohubminer/ccminer/ccminer: not found
-        self.started_gpu_title = key
-        self.started_gpu = True
+            self.gpu_button.set_sensitive(False)
+            self.gpu_buttonoff.set_sensitive(True)
 
-        if self.nvidia or self.radeon:
-            pass
-        else:
+    def on_gpu_button_clicked2(self, widget):
+        key = self.combobox_gpu2.get_active_text()
+        buf = self.user_input.get_buffer()
+        bs = buf.get_bounds()
+        user = buf.get_text(bs[0], bs[1], True)
+        if not user:
             return
 
-        self.gpu_button.set_sensitive(False)
-        self.gpu_button2.set_sensitive(True)
+        self.started_gpu2_hs = 0
+
+        self.save_user_conf(user)
+        pool = pools_gpu2[key]
+
+        if self.radeon:
+            platform = self.combobox_gpu2_platform.get_active_text()
+            platform = platform.replace("Platform ","")
+            prc = self.dir + "/sgminer/sgminer --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v --gpu-platform " + platform
+            subprocess.call(prc + " > gpu2miner.txt &", shell=True)
+
+            self.started_gpu2_title = key
+            self.started_gpu2 = True
+
+            self.gpu_button2.set_sensitive(False)
+            self.gpu_button2off.set_sensitive(True)
+
+
 
     def kill_miner(self, type):
-        if type == "gpu":
+        if type == "gpu" or type == "gpu_nvidia":
             if self.nvidia:
                 prc_name = "ccminer"
+                for proc in psutil.process_iter():
+                    if proc.name() == prc_name:
+                        proc.kill()
+
+        if type == "gpu" or type == "gpu_radeon":
             if self.radeon:
                 prc_name = "sgminer"
-            for proc in psutil.process_iter():
-                if proc.name() == prc_name:
-                    proc.kill()
+                for proc in psutil.process_iter():
+                    if proc.name() == prc_name:
+                        proc.kill()
 
         if type == "cpu":
             prc_name = "cpuminer"
@@ -449,13 +637,22 @@ class gui():
                 if proc.name() == prc_name:
                     proc.kill()
 
-    def on_gpu_button_clicked2(self, widget):
-        self.kill_miner("gpu")
+    def on_gpu_button_off_clicked(self, widget):
+        self.kill_miner("gpu_nvidia")
         self.gpu_button.set_sensitive(True)
-        self.gpu_button2.set_sensitive(False)
+        self.gpu_buttonoff.set_sensitive(False)
+        self.started_gpu_nvidia = False
         self.started_gpu = False
 
+    def on_gpu_button_off2_clicked(self, widget):
+        self.kill_miner("gpu_radeon")
+        self.gpu_button2.set_sensitive(True)
+        self.gpu_button2off.set_sensitive(False)
+        self.started_gpu_radeon = False
+        self.started_gpu2 = False
+
     def on_cpu_button_clicked(self, widget):
+        key = self.combobox_cpu.get_active_text()
         buf = self.user_input.get_buffer()
         bs = buf.get_bounds()
         user = buf.get_text(bs[0], bs[1], True)
@@ -463,12 +660,13 @@ class gui():
             return
 
         self.save_user_conf(user)
+        pool = pools_cpu[key]
         self.started_cpu_hs = 0
 
         threads = self.combobox_threads.get_active_text()
-        prc = self.dir + "/cpuminer/cpuminer -a qubit -o stratum+tcp://cryptohub.online:3042  -u " + user + " -p x  -t " + str(threads)
+        prc = self.dir + "/cpuminer/cpuminer -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x  -t " + str(threads)
         subprocess.call(prc + " > cpuminer.txt &", shell=True)
-        self.started_cpu_title = self.combobox_cpu.get_active_text()
+        self.started_cpu_title = key
         self.started_cpu = True
         self.cpu_button.set_sensitive(False)
         self.cpu_button2.set_sensitive(True)
