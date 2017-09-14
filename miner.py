@@ -56,22 +56,34 @@ def get_data_dir():
 dita_dir = get_data_dir()
 app_dir = os.path.dirname(sys.argv[0])
 
+print(app_dir)
+
 if sys.platform == 'linux2' or sys.platform == 'linux':
     ccminer_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminer"
+    ccminer_app = "ccminer"
     cpuminer_path = app_dir + os.path.sep + "cpuminer" + os.path.sep + "cpuminer"
+    cpuminer_app = "cpuminer"
     sgminer_path = app_dir + os.path.sep + "sgminer" + os.path.sep + "sgminer"
+    sgminer_app = "sgminer"
+
 elif sys.platform == "win32" or sys.platform == "cygwin":
     ccminer_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminerAlexis78.exe"
-    cpuminer_path = app_dir + os.path.sep + "cpuminer" + os.path.sep + "cpuminer.exe"
-    sgminer_path = app_dir + os.path.sep + "sgminer" + os.path.sep + "sgminer.exe"
+    ccminer_app = "ccminerAlexis78.exe"
+    cpuminer_path = app_dir + os.path.sep + "cpuminer" + os.path.sep + "cpuminer-aes-avx.exe"
+    cpuminer_app = "cpuminer-aes-avx.exe"
+    sgminer_path = app_dir + os.path.sep + "sgminer_windows" + os.path.sep + "sgminer.exe"
+    sgminer_app = "sgminer.exe"
 
 def rel_path(dir, file):
     return app_dir + os.path.sep + dir + os.path.sep + file
 
 
+
+
+
 log_f = open(dita_dir + os.path.sep + 'log.txt', 'w')
 sys.stdout = log_f
-
+sys.stderr = log_f
 
 
 class gui():
@@ -94,10 +106,12 @@ class gui():
     started_cpu_title = None
     started_cpu_hs = 0
     started_cpu_hs_upd = None
+    cpuminer_proc = None
     cpu_threads = 1
     cpu_coin = None
     gpu_coin = None
     found_devices = []
+    mining_log_sizes = {}
 
     def get_resource_path(self, rel_path):
         dir_of_py_file = os.path.dirname(__file__)
@@ -214,16 +228,13 @@ class gui():
         #gobject.threads_init()
         pl = platform.platform()
 
+        dev_info = ""
         if pl.startswith("Windows"):
-            import pywinusb.hid as hid
-            all_devices = hid.HidDeviceFilter().get_devices()
-            print(all_devices)
-            print("1")
-            #from wmi import wmi
-            #c = wmi.WMI()
-            #print(c.Win32_Processor())
+            try:
+                dev_info = subprocess.check_output(app_dir + os.path.sep + "devcon" + os.path.sep + "devcon.exe" + " find pci\*")
+            except:
+                dev_info = ""
 
-            #import platform
             import cpuinfo
             info = cpuinfo.get_cpu_info()
             cpu_threads = info['count']
@@ -237,10 +248,13 @@ class gui():
             self.is_linux = True
             from hwinfo.pci import PCIDevice
             from hwinfo.pci.lspci import LspciNNMMParser
-            from subprocess import check_output
+
+            proc_output = check_output(["lscpu"])
+            cpu_features = str(proc_output.split("Flags:".encode())[1]).split(" ")
+            cpu_threads = str(proc_output.split("CPU(s):".encode())[1]).split("\\n")[0].replace("b'", "").strip()
 
             # Obtain the output of lspci -nnmm from somewhere
-            lspci_output = check_output(["lspci", "-nnmm"])
+            lspci_output = subprocess.check_output(["lspci", "-nnmm"])
 
             # Parse the output using the LspciNNMMParser object
             parser = LspciNNMMParser(lspci_output)
@@ -251,18 +265,18 @@ class gui():
             for dev in pci_devs:
                 if dev.is_subdevice():
                     dev_info = dev.get_info()
-                    if "NVIDIA" in dev_info:
-                        self.nvidia = True
-                        self.found_devices.append(dev_info)
-                    if "Radeon" in dev_info or "RADEON" in dev_info:
-                        self.radeon = True
-                        self.found_devices.append(dev_info)
 
-            print(self.found_devices)
 
-            proc_output = check_output(["lscpu"])
-            cpu_features = str(proc_output.split("Flags:".encode())[1]).split(" ")
-            cpu_threads = str(proc_output.split("CPU(s):".encode())[1]).split("\\n")[0].replace("b'","").strip()
+        if "NVIDIA" in dev_info:
+            self.nvidia = True
+            self.found_devices.append(dev_info)
+        if "Radeon" in dev_info or "RADEON" in dev_info:
+            self.radeon = True
+            self.found_devices.append(dev_info)
+
+        print(self.found_devices)
+
+
 
         try:
             self.cpu_threads = int(cpu_threads)
@@ -463,11 +477,21 @@ class gui():
         import os.path, time
         filename = dita_dir + os.path.sep + type + "miner.txt"
         print(filename)
-        last_change = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
-        dif = datetime.datetime.now() - last_change
-        if dif > datetime.timedelta(seconds=30):
-            return res_data_all
 
+        size = os.path.getsize(filename)
+        print("size")
+        print(size)
+
+        if not type in self.mining_log_sizes:
+            self.mining_log_sizes[type] = [size, datetime.datetime.now()]
+        else:
+            print("already size")
+            if self.mining_log_sizes[type][0] == size:
+                time_dif =  datetime.datetime.now() - self.mining_log_sizes[type][1]
+                if time_dif.seconds > 30:
+                    return res_data_all
+            else:
+                self.mining_log_sizes[type] = [size, datetime.datetime.now()]
 
         last_line = str(self.open_log(filename))
         print(last_line)
@@ -486,7 +510,7 @@ class gui():
             els = last_line.split("Accepted")[1].split(",")
             shares = els[0].strip().split(" ")[1].split("/")
             print(els, shares)
-            hs = els[2]
+            hs = els[2].strip().replace("\\x1b","\x1b").split("\x1b")[0]
             res_data_all["hashrate"] = hs
             res_data_all["accepted"] = int(shares[0])
             res_data_all["rejected"] = int(shares[1]) - int(shares[0])
@@ -497,7 +521,7 @@ class gui():
             print(els)
             shares = els[0].strip().split(" ")[0].split("/")
             print(els, shares)
-            hs = els[1].strip().replace("\\x1b","\x1b").split(" \x1b")[0]
+            hs = els[1].strip().replace("\\x1b","\x1b").split("\x1b")[0]
             res_data_all["hashrate"] = hs
             res_data_all["accepted"] = int(shares[0])
             res_data_all["rejected"] = int(shares[1]) - int(shares[0])
@@ -518,10 +542,10 @@ class gui():
     def upd(self):
         #print("upd")
         if self.started_gpu:
-            self.label_status.set_markup('<span size="xx-large" foreground="green">Running</span>')
+            self.label_status.set_markup('<span size="xx-large" foreground="#4e9a06">Running</span>')
             try:
                 res_data = self.get_log("gpu")
-                self.label_title_gpu.set_markup('<span size="large" foreground="green">'+ str(self.started_gpu_title) +'</span>')
+                self.label_title_gpu.set_markup('<span size="large" foreground="#4e9a06">'+ str(self.started_gpu_title) +'</span>')
                 if self.started_gpu_hs != 0 and res_data["hashrate"] == 0:
                     if not self.started_gpu_hs_upd:
                         self.label_hashrate_gpu.set_label("")
@@ -541,7 +565,7 @@ class gui():
             except Exception as e:
                 print(e)
         else:
-            self.label_title_gpu.set_markup('<span size="large" foreground="green"></span>')
+            self.label_title_gpu.set_markup('<span size="large" foreground="#4e9a06"></span>')
             self.label_hashrate_gpu.set_label("")
             self.label_accepted_gpu.set_label("")
             self.label_rejected_gpu.set_label("")
@@ -549,10 +573,10 @@ class gui():
 
         if self.started_gpu2:
             print("gpu 2")
-            self.label_status.set_markup('<span size="xx-large" foreground="green">Running</span>')
+            self.label_status.set_markup('<span size="xx-large" foreground="#4e9a06">Running</span>')
             try:
                 res_data = self.get_log("gpu2")
-                self.label_title_gpu3.set_markup('<span size="large" foreground="green">'+ str(self.started_gpu2_title) +'</span>')
+                self.label_title_gpu3.set_markup('<span size="large" foreground="#4e9a06">'+ str(self.started_gpu2_title) +'</span>')
                 if self.started_gpu2_hs != 0 and res_data["hashrate"] == 0:
                     if not self.started_gpu2_hs_upd:
                         self.label_hashrate_gpu3.set_label("")
@@ -572,17 +596,16 @@ class gui():
             except Exception as e:
                 print(e)
         else:
-            self.label_title_gpu3.set_markup('<span size="large" foreground="green"></span>')
+            self.label_title_gpu3.set_markup('<span size="large" foreground="#4e9a06"></span>')
             self.label_hashrate_gpu3.set_label("")
             self.label_accepted_gpu3.set_label("")
             self.label_rejected_gpu3.set_label("")
 
 
         if self.started_cpu:
-            self.label_title_cpu.set_markup('<span size="large" foreground="green">Q2C</span>')
             try:
                 res_data = self.get_log("cpu")
-                self.label_title_cpu.set_markup('<span size="large" foreground="green">' + str(self.started_cpu_title) + '</span>')
+                self.label_title_cpu.set_markup('<span size="large" foreground="#4e9a06">' + str(self.started_cpu_title) + '</span>')
                 self.label_hashrate_cpu.set_label(str(res_data["hashrate"]))
                 #print("hh", self.started_cpu_hs, res_data["hashrate"], self.started_cpu_hs != 0, res_data["hashrate"] == 0)
                 if self.started_cpu_hs != 0 and res_data["hashrate"] == 0:
@@ -605,7 +628,7 @@ class gui():
             except Exception as e:
                 print(e)
         else:
-            self.label_title_cpu.set_markup('<span size="large" foreground="green"></span>')
+            self.label_title_cpu.set_markup('<span size="large" foreground="#4e9a06"></span>')
             self.label_hashrate_cpu.set_label("")
             self.label_accepted_cpu.set_label("")
             self.label_rejected_cpu.set_label("")
@@ -613,7 +636,7 @@ class gui():
 
         if self.started_gpu or self.started_gpu2 or self.started_cpu:
             self.img.set_from_file(rel_path("imgs", "run.png"))
-            self.label_status.set_markup('<span size="xx-large" foreground="green">Running</span>')
+            self.label_status.set_markup('<span size="xx-large" foreground="#4e9a06">Running</span>')
         else:
             self.img.set_from_file(rel_path("imgs", "stop.png"))
             self.label_status.set_markup('<span size="xx-large" foreground="red">Idle</span>')
@@ -638,7 +661,13 @@ class gui():
         print(pool)
         if self.nvidia:
             prc = ccminer_path + " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
-            subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpuminer.txt &", shell=True)
+            try:
+                if self.is_linux:
+                    subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpuminer.txt &", shell=True)
+                else:
+                    self.cpuminer_proc = subprocess.Popen(prc + " > " + dita_dir + os.path.sep + "gpuminer.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
+            except Exceptions as e:
+                print(e)
 
             self.started_gpu_title = key
             self.started_gpu = True
@@ -663,7 +692,13 @@ class gui():
             platform = self.combobox_gpu2_platform.get_active_text()
             platform = platform.replace("Platform ","")
             prc = sgminer_path + " --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v --gpu-platform " + platform
-            subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpu2miner.txt &", shell=True)
+            try:
+                if self.is_linux:
+                    subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpu2miner.txt &", shell=True)
+                else:
+                    self.cpuminer_proc = subprocess.Popen(prc + " > " + dita_dir + os.path.sep + "gpu2miner.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
+            except Exceptions as e:
+                print(e)
 
             self.started_gpu2_title = key
             self.started_gpu2 = True
@@ -676,20 +711,20 @@ class gui():
     def kill_miner(self, type):
         if type == "gpu" or type == "gpu_nvidia":
             if self.nvidia:
-                prc_name = "ccminer"
+                prc_name = ccminer_app
                 for proc in psutil.process_iter():
                     if proc.name() == prc_name:
                         proc.kill()
 
         if type == "gpu" or type == "gpu_radeon":
             if self.radeon:
-                prc_name = "sgminer"
+                prc_name = sgminer_app
                 for proc in psutil.process_iter():
                     if proc.name() == prc_name:
                         proc.kill()
 
         if type == "cpu":
-            prc_name = "cpuminer"
+            prc_name = cpuminer_app
             for proc in psutil.process_iter():
                 if proc.name() == prc_name:
                     proc.kill()
@@ -723,7 +758,13 @@ class gui():
         threads = self.combobox_threads.get_active_text()
         prc = cpuminer_path +  " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x  -t " + str(threads)
         print(prc)
-        subprocess.call(prc + " > " + dita_dir + os.path.sep + "cpuminer.txt &", shell=True)
+        try:
+            if self.is_linux:
+                subprocess.call(prc + " > " + dita_dir + os.path.sep + "cpuminer.txt &", shell=True)
+            else:
+                self.cpuminer_proc = subprocess.Popen(prc + " > " + dita_dir + os.path.sep + "cpuminer.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
+        except Exception as e:
+            print(e)
         self.started_cpu_title = key
         self.started_cpu = True
         self.cpu_button.set_sensitive(False)

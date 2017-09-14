@@ -1,41 +1,0 @@
-[06:50:41] Started sgminer 5.3.9                    
-[06:50:41] * using Jansson 2.6                    
-[06:50:41] CL Platform vendor: NVIDIA Corporation                    
-[06:50:41] CL Platform name: NVIDIA CUDA                    
-[06:50:41] CL Platform version: OpenCL 1.2 CUDA 8.0.0                    
-[06:50:41] Platform devices: 1                    
-[06:50:41] 	0	GeForce GTX 1060 3GB                    
-[06:50:41] Unable to load the AMD Display Library                    
-[06:50:41] WARNING: GPU_MAX_ALLOC_PERCENT is not specified!                    
-[06:50:41] WARNING: GPU_USE_SYNC_OBJECTS is not specified!                    
-[06:50:41] Probing for an alive pool                    
-[06:50:41] Testing cryptohub.online                    
-[06:50:42] cryptohub.online difficulty changed to 0.020                    
-[06:50:45] Stratum authorisation success for cryptohub.online                    
-[06:50:45] cryptohub.online alive                    
-[06:50:45] Startup GPU initialization... Using settings from pool cryptohub.online.                    
-[06:50:45] Startup Pool No = 0                    
-[06:50:45] Init GPU thread 0 GPU 0 virtual GPU 0                    
-[06:50:45] CL Platform vendor: NVIDIA Corporation                    
-[06:50:45] CL Platform name: NVIDIA CUDA                    
-[06:50:45] CL Platform version: OpenCL 1.2 CUDA 8.0.0                    
-[06:50:45] Platform devices: 1                    
-[06:50:45] 	0	GeForce GTX 1060 3GB                    
-[06:50:45] List of devices:                    
-[06:50:45] 	0	GeForce GTX 1060 3GB                    
-[06:50:45] Selected 0: GeForce GTX 1060 3GB                    
-[06:50:45] Maximum work size for this GPU (0) is 1024.                    
-[06:50:45] Your GPU (#0) has 9 compute units, and all AMD cards in the 7 series or newer (GCN cards) have 64 shaders per unit, this means it has 576 shaders.                    
-[06:50:45] GPU 0 PCI BUS 01                    
-[06:50:45] NVIDIA management enabled on GPU 0                    
-[06:50:45] Initialising kernel talkcoin-mod.cl                    
-[06:50:45] initCl() finished. Found GeForce GTX 1060 3GB                    
-[06:50:46] Work update message received                    
-[06:50:46] New block: 0000000000d83204decfeaffe54d84c05be33d2a97c897bdb9956972a75a592e... diff 68                    
-(5s):1.999M (avg):5.119Mh/s | A:0  R:0  HW:0  WU:0.000/m          (5s):3.215M (avg):5.115Mh/s | A:0  R:0  HW:0  WU:0.000/m          (5s):3.954M (avg):5.112Mh/s | A:0  R:0  HW:0  WU:0.000/m          (5s):4.404M (avg):5.110Mh/s | A:0  R:0  HW:0  WU:0.000/m          [06:51:09] New best share: 0.051                    
-[06:51:09] Submitting share 872e610e to cryptohub.online                    
-[06:51:09] Pool 0 stratum share submission lag time 0 seconds                    
-[06:51:09] Pool 0 stratum share result lag time 0 seconds                    
-[06:51:09] Accepted 13872e61 Diff 0.051/0.020 GPU 0                     
-[06:51:11] Work update message received                    
-(5s):4.679M (avg):5.110Mh/s | A:0  R:0  HW:0  WU:0.047/m          (5s):4.848M (avg):5.110Mh/s | A:0  R:0  HW:0  WU:0.039/m          
