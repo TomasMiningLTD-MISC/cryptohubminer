@@ -1,5 +1,46 @@
-[10:27:58] Started sgminer 5.3.9                    
-[10:27:58] * using Jansson 2.6                    
-[10:27:59] Specified platform that does not exist                    
-[10:27:59] clDevicesNum returned error, no GPUs usable                    
-[10:27:59] All devices disabled, cannot mine!                    
+[00:51:29] Started sgminer 5.3.9                    
+[00:51:29] * using Jansson 2.6                    
+[00:51:29] CL Platform vendor: NVIDIA Corporation                    
+[00:51:29] CL Platform name: NVIDIA CUDA                    
+[00:51:29] CL Platform version: OpenCL 1.2 CUDA 8.0.0                    
+[00:51:29] Platform devices: 1                    
+[00:51:29] 	0	GeForce GTX 1060 3GB                    
+[00:51:29] Unable to load the AMD Display Library                    
+[00:51:29] WARNING: GPU_MAX_ALLOC_PERCENT is not specified!                    
+[00:51:29] WARNING: GPU_USE_SYNC_OBJECTS is not specified!                    
+[00:51:29] Probing for an alive pool                    
+[00:51:29] Testing cryptohub.online                    
+[00:51:30] cryptohub.online difficulty changed to 0.020                    
+[00:51:32] Stratum authorisation success for cryptohub.online                    
+[00:51:32] cryptohub.online alive                    
+[00:51:32] Startup GPU initialization... Using settings from pool cryptohub.online.                    
+[00:51:32] Startup Pool No = 0                    
+[00:51:32] Init GPU thread 0 GPU 0 virtual GPU 0                    
+[00:51:32] CL Platform vendor: NVIDIA Corporation                    
+[00:51:32] CL Platform name: NVIDIA CUDA                    
+[00:51:32] CL Platform version: OpenCL 1.2 CUDA 8.0.0                    
+[00:51:32] Platform devices: 1                    
+[00:51:32] 	0	GeForce GTX 1060 3GB                    
+[00:51:32] List of devices:                    
+[00:51:32] 	0	GeForce GTX 1060 3GB                    
+[00:51:32] Selected 0: GeForce GTX 1060 3GB                    
+[00:51:32] Maximum work size for this GPU (0) is 1024.                    
+[00:51:32] Your GPU (#0) has 9 compute units, and all AMD cards in the 7 series or newer (GCN cards) have 64 shaders per unit, this means it has 576 shaders.                    
+[00:51:32] GPU 0 PCI BUS 01                    
+[00:51:32] NVIDIA management enabled on GPU 0                    
+[00:51:32] Initialising kernel talkcoin-mod.cl                    
+[00:51:32] initCl() finished. Found GeForce GTX 1060 3GB                    
+[00:51:34] Work update message received                    
+[00:51:34] New block: 1c5bc5c61e90b96eeb3d099110de34442a5798f446e8d304e4810ff74be8bc6c... diff 331                    
+[00:51:35] New best share: 0.025                    
+[00:51:35] Submitting share 4f1cea8e to cryptohub.online                    
+[00:51:35] Pool 0 stratum share submission lag time 0 seconds                    
+[00:51:36] Pool 0 stratum share result lag time 1 seconds                    
+[00:51:36] Accepted 274f1cea Diff 0.025/0.020 GPU 0                     
+(5s):2.399M (avg):6.145Mh/s | A:0  R:0  HW:0  WU:0.234/m          [00:51:40] Work update message received                    
+(5s):3.894M (avg):6.197Mh/s | A:0  R:0  HW:0  WU:0.118/m          (5s):4.777M (avg):6.184Mh/s | A:0  R:0  HW:0  WU:0.079/m          (5s):5.323M (avg):6.182Mh/s | A:0  R:0  HW:0  WU:0.059/m          [00:51:55] New best share: 0.350                    
+[00:51:55] Submitting share dbedb61a to cryptohub.online                    
+[00:51:55] Pool 0 stratum share submission lag time 0 seconds                    
+[00:51:56] Pool 0 stratum share result lag time 1 seconds                    
+[00:51:56] Accepted 02dbedb6 Diff 0.350/0.020 GPU 0                     
+(5s):5.635M (avg):6.170Mh/s | A:0  R:0  HW:0  WU:0.094/m          (5s):5.916M (avg):6.200Mh/s | A:0  R:0  HW:0  WU:0.078/m          

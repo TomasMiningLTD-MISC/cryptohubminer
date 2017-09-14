@@ -14,7 +14,7 @@ echo -e  "Architecture: amd64" >> debian_pkg/DEBIAN/control
 echo -e  "Section: misc" >> debian_pkg/DEBIAN/control
 echo -e  "Description: GUI app for mining using ccminer, sgminer and cpuminr." >> debian_pkg/DEBIAN/control
 
-echo -e  "Depends: python3" >> debian_pkg/DEBIAN/control
+echo -e  "Depends: python3,gtk2.0,python-gtk2-dev" >> debian_pkg/DEBIAN/control
 
 
 mkdir -p debian_pkg/usr/share/applications

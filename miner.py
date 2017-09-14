@@ -1,5 +1,5 @@
-import gi
 try:
+    import gi
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gtk, Gdk, GObject
     print("gtk 3")
@@ -7,18 +7,18 @@ except:
     import pygtk
     pygtk.require('2.0')
     print("gtk 2")
-    import gtk
+    import gtk as Gtk
+    import gobject as GObject
+    import gtk.gdk as Gdk
 import threading, subprocess, psutil
 import os
 import platform
-import telnetlib
 import datetime
 import re
 import decimal
 import sys
 
-log_f = open('log.txt', 'w')
-#sys.stdout = log_f
+
 
 pools_cpu = {
     "Q2C": ["cryptohub.online:3042","qubit"],
@@ -29,7 +29,7 @@ pools_gpu = {
     "XLR": ["cryptohub.online:3032","nist5"],
     "WYV": ["cryptohub.online:3052","nist5"],
     "Q2C": ["cryptohub.online:3042","qubit"],
-    "ONION": ["cryptohub.online:3101","x11"],
+    "ONION": ["cryptohub.online:3101","x13"],
 }
 
 #radeon
@@ -44,17 +44,34 @@ def get_data_dir():
     if sys.platform == 'linux2' or sys.platform == 'linux':
         dat_dir = os.path.expanduser("~") + "/.cryptohubminer"
     elif sys.platform == "win32" or sys.platform == "cygwin":
-        dat_dir = os.getenv('APPDATA')
+        dat_dir = os.getenv('APPDATA') + os.path.sep + "cryptohubminer"
     print(dat_dir)
 
     if not os.path.exists(dat_dir):
-        #os.makedirs(dat_dir)
-        pass
+        os.makedirs(dat_dir)
 
     return dat_dir
 
 
 dita_dir = get_data_dir()
+app_dir = os.path.dirname(sys.argv[0])
+
+if sys.platform == 'linux2' or sys.platform == 'linux':
+    ccminer_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminer"
+    cpuminer_path = app_dir + os.path.sep + "cpuminer" + os.path.sep + "cpuminer"
+    sgminer_path = app_dir + os.path.sep + "sgminer" + os.path.sep + "sgminer"
+elif sys.platform == "win32" or sys.platform == "cygwin":
+    ccminer_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminerAlexis78.exe"
+    cpuminer_path = app_dir + os.path.sep + "cpuminer" + os.path.sep + "cpuminer.exe"
+    sgminer_path = app_dir + os.path.sep + "sgminer" + os.path.sep + "sgminer.exe"
+
+def rel_path(dir, file):
+    return app_dir + os.path.sep + dir + os.path.sep + file
+
+
+log_f = open(dita_dir + os.path.sep + 'log.txt', 'w')
+sys.stdout = log_f
+
 
 
 class gui():
@@ -90,12 +107,19 @@ class gui():
 
     def on_destroy(self, widget=None, *data):
         if self.started_gpu or self.started_cpu:
-            messagedialog = Gtk.MessageDialog(self.window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, "On close mining process will be stopped")
+            try:
+                messagedialog = Gtk.MessageDialog(self.window, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, "On close mining process will be stopped")
+            except:
+                messagedialog = Gtk.MessageDialog(self.window, 0, Gtk.MESSAGE_INFO, Gtk.BUTTONS_OK_CANCEL, "On close mining process will be stopped")
             messagedialog.show_all()
             result = messagedialog.run()
             messagedialog.destroy()
-            if result == Gtk.ResponseType.CANCEL:
-                return True
+            try:
+                if result == Gtk.ResponseType.CANCEL:
+                    return True
+            except:
+                if result == Gtk.RESPONSE_CANCEL:
+                    return True
         self.kill_miner("gpu")
         self.kill_miner("cpu")
         log_f.close()
@@ -103,7 +127,6 @@ class gui():
         return False
 
     def __init__(self):
-        self.dir = os.path.dirname(os.path.abspath(__file__))
         self.window = Gtk.Window()
         self.window.set_default_size(800, 600)
         self.window.set_title("CryptoHubMiner")
@@ -119,7 +142,7 @@ class gui():
 
 
         self.img = Gtk.Image()
-        self.img.set_from_file(self.dir + "/imgs/stop.png")
+        self.img.set_from_file(rel_path("imgs", "stop.png"))
         self.hbox_status.pack_start(self.img, False, True, 10)
 
         self.label_status = Gtk.Label('idle')
@@ -196,10 +219,19 @@ class gui():
             all_devices = hid.HidDeviceFilter().get_devices()
             print(all_devices)
             print("1")
-            from wmi import wmi
-            c = wmi.WMI()
-            print(c.Win32_Processor())
+            #from wmi import wmi
+            #c = wmi.WMI()
+            #print(c.Win32_Processor())
 
+            #import platform
+            import cpuinfo
+            info = cpuinfo.get_cpu_info()
+            cpu_threads = info['count']
+            info2 = cpuinfo.get_cpu_info_from_cpuid()
+            try:
+                cpu_features = info2['flags']
+            except:
+                cpu_features = info['flags']
 
         else:
             self.is_linux = True
@@ -231,12 +263,14 @@ class gui():
             proc_output = check_output(["lscpu"])
             cpu_features = str(proc_output.split("Flags:".encode())[1]).split(" ")
             cpu_threads = str(proc_output.split("CPU(s):".encode())[1]).split("\\n")[0].replace("b'","").strip()
-            try:
-                self.cpu_threads = int(cpu_threads)
-            except:
-                self.cpu_threads = 4
-            if not "avx2" in cpu_features and not "aes" in cpu_features and not "avx" in cpu_features:
-                self.old_cpu = True
+
+        try:
+            self.cpu_threads = int(cpu_threads)
+        except:
+            self.cpu_threads = 2
+        print("features", cpu_features, cpu_threads)
+        if not "avx2" in cpu_features and not "aes" in cpu_features and not "avx" in cpu_features:
+            self.old_cpu = True
 
 
 
@@ -249,14 +283,17 @@ class gui():
 
 
         self.user_input_frame = Gtk.Frame()
-        self.user_input_frame.get_style_context().add_class("inp")
+        try:
+            self.user_input_frame.get_style_context().add_class("inp")
+        except:
+            pass
 
         self.user_input = Gtk.TextView()
         self.user_input_box.pack_start(self.user_input_frame, True, True, 50)
         self.user_input_frame.add(self.user_input)
 
         try:
-            with open("user.conf", "r") as myfile:
+            with open(dita_dir + os.path.sep + "user.conf", "r") as myfile:
                 user = myfile.readline().strip()
                 self.user_input.get_buffer().set_text(user)
         except Exception as e:
@@ -276,20 +313,27 @@ class gui():
         else:
             self.label_cpu = Gtk.Label("Select a coin to mine on CPU:")
             self.box.pack_start(self.label_cpu, True, True, 20)
-            self.box_nv = Gtk.Box()
+            self.box_nv = Gtk.HBox()
             self.box.pack_start(self.box_nv, True, True, 20)
 
             self.cpuhbox = Gtk.HBox()
             self.box_nv.pack_start(self.cpuhbox, True, True, 10)
 
-            self.combobox_cpu = Gtk.ComboBoxText()
+            try:
+                self.combobox_cpu = Gtk.ComboBoxText()
+            except:
+                self.combobox_cpu = Gtk.combo_box_new_text()
             self.combobox_cpu.append_text("Q2C")
             self.cpuhbox.pack_start(self.combobox_cpu, True, True, 10)
 
             self.label_cpu_threads = Gtk.Label("Threads:")
             self.cpuhbox.pack_start(self.label_cpu_threads, False, True, 20)
 
-            self.combobox_threads = Gtk.ComboBoxText()
+            try:
+                self.combobox_threads = Gtk.ComboBoxText()
+            except:
+                self.combobox_threads = Gtk.combo_box_new_text()
+
             for i in range(self.cpu_threads):
                 self.combobox_threads.append_text(str(i+1))
             try:
@@ -319,10 +363,14 @@ class gui():
             self.label_hashrate = Gtk.Label('Select a coin to mine on Nvidia GPU(s):')
             self.box.pack_start(self.label_hashrate, True, True, 20)
 
-            self.box_nv = Gtk.Box()
+            self.box_nv = Gtk.HBox()
             self.box.pack_start(self.box_nv, True, True, 20)
 
-            self.combobox_gpu = Gtk.ComboBoxText()
+            try:
+                self.combobox_gpu = Gtk.ComboBoxText()
+            except:
+                self.combobox_gpu = Gtk.combo_box_new_text()
+
             for k,el in pools_gpu.items():
                 self.combobox_gpu.append_text(k)
             self.box_nv.pack_start(self.combobox_gpu, True, True, 10)
@@ -345,15 +393,23 @@ class gui():
             self.label_hashrate2 = Gtk.Label('Select a coin to mine on Radeon GPU(s):')
             self.box.pack_start(self.label_hashrate2, True, True, 20)
 
-            self.box_nv2 = Gtk.Box()
+            self.box_nv2 = Gtk.HBox()
             self.box.pack_start(self.box_nv2, True, True, 20)
 
-            self.combobox_gpu2 = Gtk.ComboBoxText()
+            try:
+                self.combobox_gpu2 = Gtk.ComboBoxText()
+            except:
+                self.combobox_gpu2 = Gtk.combo_box_new_text()
+
             for k, el in pools_gpu2.items():
                 self.combobox_gpu2.append_text(k)
             self.box_nv2.pack_start(self.combobox_gpu2, True, True, 10)
 
-            self.combobox_gpu2_platform = Gtk.ComboBoxText()
+            try:
+                self.combobox_gpu2_platform = Gtk.ComboBoxText()
+            except:
+                self.combobox_gpu2_platform = Gtk.combo_box_new_text()
+
             self.combobox_gpu2_platform.append_text("Platform 0")
             self.combobox_gpu2_platform.append_text("Platform 1")
             self.combobox_gpu2_platform.append_text("Platform 2")
@@ -405,7 +461,8 @@ class gui():
         }
 
         import os.path, time
-        filename = type + "miner.txt"
+        filename = dita_dir + os.path.sep + type + "miner.txt"
+        print(filename)
         last_change = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
         dif = datetime.datetime.now() - last_change
         if dif > datetime.timedelta(seconds=30):
@@ -440,7 +497,7 @@ class gui():
             print(els)
             shares = els[0].strip().split(" ")[0].split("/")
             print(els, shares)
-            hs = els[1].strip().split(" \\x1b")[0]
+            hs = els[1].strip().replace("\\x1b","\x1b").split(" \x1b")[0]
             res_data_all["hashrate"] = hs
             res_data_all["accepted"] = int(shares[0])
             res_data_all["rejected"] = int(shares[1]) - int(shares[0])
@@ -459,7 +516,7 @@ class gui():
         return res_data_all
 
     def upd(self):
-        print("upd")
+        #print("upd")
         if self.started_gpu:
             self.label_status.set_markup('<span size="xx-large" foreground="green">Running</span>')
             try:
@@ -555,10 +612,10 @@ class gui():
 
 
         if self.started_gpu or self.started_gpu2 or self.started_cpu:
-            self.img.set_from_file(self.dir + "/imgs/run.png")
+            self.img.set_from_file(rel_path("imgs", "run.png"))
             self.label_status.set_markup('<span size="xx-large" foreground="green">Running</span>')
         else:
-            self.img.set_from_file(self.dir + "/imgs/stop.png")
+            self.img.set_from_file(rel_path("imgs", "stop.png"))
             self.label_status.set_markup('<span size="xx-large" foreground="red">Idle</span>')
         GObject.timeout_add(1000, self.upd)
 
@@ -580,8 +637,8 @@ class gui():
         pool = pools_gpu[key]
         print(pool)
         if self.nvidia:
-            prc = self.dir + "/ccminer/ccminer -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
-            subprocess.call(prc + " > gpuminer.txt &", shell=True)
+            prc = ccminer_path + " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
+            subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpuminer.txt &", shell=True)
 
             self.started_gpu_title = key
             self.started_gpu = True
@@ -605,8 +662,8 @@ class gui():
         if self.radeon:
             platform = self.combobox_gpu2_platform.get_active_text()
             platform = platform.replace("Platform ","")
-            prc = self.dir + "/sgminer/sgminer --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v --gpu-platform " + platform
-            subprocess.call(prc + " > gpu2miner.txt &", shell=True)
+            prc = sgminer_path + " --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v --gpu-platform " + platform
+            subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpu2miner.txt &", shell=True)
 
             self.started_gpu2_title = key
             self.started_gpu2 = True
@@ -664,8 +721,9 @@ class gui():
         self.started_cpu_hs = 0
 
         threads = self.combobox_threads.get_active_text()
-        prc = self.dir + "/cpuminer/cpuminer -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x  -t " + str(threads)
-        subprocess.call(prc + " > cpuminer.txt &", shell=True)
+        prc = cpuminer_path +  " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x  -t " + str(threads)
+        print(prc)
+        subprocess.call(prc + " > " + dita_dir + os.path.sep + "cpuminer.txt &", shell=True)
         self.started_cpu_title = key
         self.started_cpu = True
         self.cpu_button.set_sensitive(False)
@@ -679,7 +737,7 @@ class gui():
 
     def save_user_conf(self, user):
         try:
-            with open("user.conf", "w") as myfile:
+            with open(dita_dir + os.path.sep + "user.conf", "w") as myfile:
                 myfile.write(str(user) + "\n")
         except Exception as e:
             print(e)
@@ -701,14 +759,18 @@ class gui():
         border-color: black;
     }
             """
-            style_provider = Gtk.CssProvider()
-            style_provider.load_from_data(css)
+            try:
+                style_provider = Gtk.CssProvider()
+                style_provider.load_from_data(css)
 
-            Gtk.StyleContext.add_provider_for_screen(
-                Gdk.Screen.get_default(),
-                style_provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-            )
+                Gtk.StyleContext.add_provider_for_screen(
+                    Gdk.Screen.get_default(),
+                    style_provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                )
+
+            except:
+                pass
 
 
 
