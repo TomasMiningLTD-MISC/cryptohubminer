@@ -147,6 +147,8 @@ class gui():
         self.window.connect('delete-event', self.on_destroy)
         self.window.set_icon_from_file(self.get_resource_path("imgs/icon.png"))
 
+        print("here")
+
         self.box = Gtk.VBox()
         self.window.add(self.box)
 
@@ -228,12 +230,12 @@ class gui():
         #gobject.threads_init()
         pl = platform.platform()
 
-        dev_info = ""
+        dev_info_all = ""
         if pl.startswith("Windows"):
             try:
-                dev_info = subprocess.check_output(app_dir + os.path.sep + "devcon" + os.path.sep + "devcon.exe" + " find pci\*")
+                dev_info_all = subprocess.check_output(app_dir + os.path.sep + "devcon" + os.path.sep + "devcon.exe" + " find pci\*")
             except:
-                dev_info = ""
+                dev_info_all = ""
 
             import cpuinfo
             info = cpuinfo.get_cpu_info()
@@ -249,7 +251,7 @@ class gui():
             from hwinfo.pci import PCIDevice
             from hwinfo.pci.lspci import LspciNNMMParser
 
-            proc_output = check_output(["lscpu"])
+            proc_output = subprocess.check_output(["lscpu"])
             cpu_features = str(proc_output.split("Flags:".encode())[1]).split(" ")
             cpu_threads = str(proc_output.split("CPU(s):".encode())[1]).split("\\n")[0].replace("b'", "").strip()
 
@@ -265,14 +267,15 @@ class gui():
             for dev in pci_devs:
                 if dev.is_subdevice():
                     dev_info = dev.get_info()
+                    dev_info_all += str(dev_info)
 
 
-        if "NVIDIA" in dev_info:
+        if "NVIDIA" in dev_info_all:
             self.nvidia = True
-            self.found_devices.append(dev_info)
-        if "Radeon" in dev_info or "RADEON" in dev_info:
+            #self.found_devices.append(dev_info)
+        if "Radeon" in dev_info_all or "RADEON" in dev_info_all:
             self.radeon = True
-            self.found_devices.append(dev_info)
+            #self.found_devices.append(dev_info)
 
         print(self.found_devices)
 
@@ -285,7 +288,6 @@ class gui():
         print("features", cpu_features, cpu_threads)
         if not "avx2" in cpu_features and not "aes" in cpu_features and not "avx" in cpu_features:
             self.old_cpu = True
-
 
 
         self.label_cpu = Gtk.Label("Enter your CryptoHub user:")
@@ -318,11 +320,8 @@ class gui():
         self.gtk_style()
 
 
-
-
-
         if self.old_cpu:
-            self.label_cpu = Gtk.Label("Your CPU is too old and doesn't support AES not AVX.")
+            self.label_cpu = Gtk.Label("Your CPU is too old and doesn't support AES nor AVX.")
             self.box.pack_start(self.label_cpu, True, True, 20)
         else:
             self.label_cpu = Gtk.Label("Select a coin to mine on CPU:")
@@ -430,6 +429,10 @@ class gui():
             self.combobox_gpu2_platform.set_active(0)
             self.box_nv2.pack_start(self.combobox_gpu2_platform, True, True, 10)
             self.label_sel_platform = Gtk.Label('If mining doesnt work try to choose another platform')
+            if self.nvidia:
+                self.label_sel_platform.set_markup('<span size="small" foreground="maroon">If mining doesn\'t work or loads nvidia gpu instead, try other platforms</span>')
+            else:
+                self.label_sel_platform.set_markup('<span size="small" foreground="maroon">If mining doesn\'t work try other platforms</span>')
             self.box_nv2.pack_start(self.label_sel_platform, True, True, 10)
 
 
@@ -666,7 +669,7 @@ class gui():
                     subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpuminer.txt &", shell=True)
                 else:
                     self.cpuminer_proc = subprocess.Popen(prc + " > " + dita_dir + os.path.sep + "gpuminer.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
-            except Exceptions as e:
+            except Exception as e:
                 print(e)
 
             self.started_gpu_title = key
@@ -674,6 +677,7 @@ class gui():
 
             self.gpu_button.set_sensitive(False)
             self.gpu_buttonoff.set_sensitive(True)
+            self.combobox_gpu.set_sensitive(False)
 
     def on_gpu_button_clicked2(self, widget):
         key = self.combobox_gpu2.get_active_text()
@@ -697,7 +701,7 @@ class gui():
                     subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpu2miner.txt &", shell=True)
                 else:
                     self.cpuminer_proc = subprocess.Popen(prc + " > " + dita_dir + os.path.sep + "gpu2miner.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
-            except Exceptions as e:
+            except Exception as e:
                 print(e)
 
             self.started_gpu2_title = key
@@ -705,6 +709,8 @@ class gui():
 
             self.gpu_button2.set_sensitive(False)
             self.gpu_button2off.set_sensitive(True)
+            self.combobox_gpu2.set_sensitive(False)
+            self.combobox_gpu2_platform.set_sensitive(False)
 
 
 
@@ -735,6 +741,7 @@ class gui():
         self.gpu_buttonoff.set_sensitive(False)
         self.started_gpu_nvidia = False
         self.started_gpu = False
+        self.combobox_gpu.set_sensitive(True)
 
     def on_gpu_button_off2_clicked(self, widget):
         self.kill_miner("gpu_radeon")
@@ -742,6 +749,8 @@ class gui():
         self.gpu_button2off.set_sensitive(False)
         self.started_gpu_radeon = False
         self.started_gpu2 = False
+        self.combobox_gpu2.set_sensitive(True)
+        self.combobox_gpu2_platform.set_sensitive(True)
 
     def on_cpu_button_clicked(self, widget):
         key = self.combobox_cpu.get_active_text()
@@ -769,12 +778,16 @@ class gui():
         self.started_cpu = True
         self.cpu_button.set_sensitive(False)
         self.cpu_button2.set_sensitive(True)
+        self.combobox_cpu.set_sensitive(False)
+        self.combobox_threads.set_sensitive(False)
 
     def on_cpu_button_clicked2(self, widget):
         self.kill_miner("cpu")
         self.cpu_button.set_sensitive(True)
         self.cpu_button2.set_sensitive(False)
         self.started_cpu = False
+        self.combobox_cpu.set_sensitive(True)
+        self.combobox_threads.set_sensitive(True)
 
     def save_user_conf(self, user):
         try:
