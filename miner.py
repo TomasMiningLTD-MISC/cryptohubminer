@@ -19,6 +19,12 @@ import decimal
 import sys
 
 
+def raw(text,linux):
+    if not linux:
+        return '"' + text + '"'
+    else:
+        return text
+
 
 pools_cpu = {
     "Q2C": ["cryptohub.online:3042","qubit"],
@@ -114,7 +120,7 @@ class gui():
     mining_log_sizes = {}
 
     def get_resource_path(self, rel_path):
-        dir_of_py_file = os.path.dirname(__file__)
+        dir_of_py_file = app_dir
         rel_path_to_resource = os.path.join(dir_of_py_file, rel_path)
         abs_path_to_resource = os.path.abspath(rel_path_to_resource)
         return abs_path_to_resource
@@ -142,10 +148,14 @@ class gui():
 
     def __init__(self):
         self.window = Gtk.Window()
-        self.window.set_default_size(800, 600)
+        self.window.set_resizable(False)
+        self.window.set_size_request(520, 750)
         self.window.set_title("CryptoHubMiner")
         self.window.connect('delete-event', self.on_destroy)
-        self.window.set_icon_from_file(self.get_resource_path("imgs/icon.png"))
+        try:
+            self.window.set_icon_from_file(self.get_resource_path("imgs/icon.png"))
+        except:
+            pass
 
         print("here")
 
@@ -166,6 +176,10 @@ class gui():
         self.hbox_status.pack_start(self.label_status, False, True, 10)
 
         self.fr = Gtk.Frame()
+        try:
+            self.fr.set_shadow_type(Gtk.SHADOW_NONE)
+        except:
+            self.fr.set_shadow_type(Gtk.ShadowType.NONE)
         self.hbox_status.pack_start(self.fr, True, True, 10)
 
         self.box_c1 = Gtk.VBox()
@@ -187,6 +201,10 @@ class gui():
         #self.box_c1.pack_start(self.label_coin_cpu_bal_conf, True, True, 0)
 
         self.fr2 = Gtk.Frame()
+        try:
+            self.fr2.set_shadow_type(Gtk.SHADOW_NONE)
+        except:
+            self.fr2.set_shadow_type(Gtk.ShadowType.NONE)
         self.hbox_status.pack_start(self.fr2, True, True, 10)
 
         self.box_c2 = Gtk.VBox()
@@ -205,8 +223,11 @@ class gui():
         self.box_c2.pack_start(self.label_rejected_gpu, True, True, 0)
 
 
-
         self.fr3 = Gtk.Frame()
+        try:
+            self.fr3.set_shadow_type(Gtk.SHADOW_NONE)
+        except:
+            self.fr3.set_shadow_type(Gtk.ShadowType.NONE)
         self.hbox_status.pack_start(self.fr3, True, True, 10)
 
         self.box_c3 = Gtk.VBox()
@@ -234,8 +255,12 @@ class gui():
         if pl.startswith("Windows"):
             try:
                 dev_info_all = subprocess.check_output(app_dir + os.path.sep + "devcon" + os.path.sep + "devcon.exe" + " find pci\*")
-            except:
+            except Exception as e:
+                print(e)
                 dev_info_all = ""
+
+            print("dev_info_all")
+            print(dev_info_all)
 
             import cpuinfo
             info = cpuinfo.get_cpu_info()
@@ -663,12 +688,13 @@ class gui():
         pool = pools_gpu[key]
         print(pool)
         if self.nvidia:
-            prc = ccminer_path + " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
+            prc = raw(ccminer_path,self.is_linux) + " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
+            print(prc)
             try:
                 if self.is_linux:
-                    subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpuminer.txt &", shell=True)
+                    subprocess.call(prc + " > " + raw(dita_dir,self.is_linux) + os.path.sep + "gpuminer.txt &", shell=True)
                 else:
-                    self.cpuminer_proc = subprocess.Popen(prc + " > " + dita_dir + os.path.sep + "gpuminer.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
+                    subprocess.Popen(prc + " > " + raw(dita_dir,self.is_linux) + os.path.sep + "gpuminer.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
             except Exception as e:
                 print(e)
 
@@ -695,12 +721,14 @@ class gui():
         if self.radeon:
             platform = self.combobox_gpu2_platform.get_active_text()
             platform = platform.replace("Platform ","")
-            prc = sgminer_path + " --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v --gpu-platform " + platform
+            prc = raw(sgminer_path,self.is_linux) + " --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v --gpu-platform " + platform
+            print(prc)
             try:
                 if self.is_linux:
                     subprocess.call(prc + " > " + dita_dir + os.path.sep + "gpu2miner.txt &", shell=True)
                 else:
-                    self.cpuminer_proc = subprocess.Popen(prc + " > " + dita_dir + os.path.sep + "gpu2miner.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
+                    print(prc + " > " + raw(dita_dir,self.is_linux) + os.path.sep + "gpu2miner.txt")
+                    subprocess.Popen(prc + " > " + raw(dita_dir,self.is_linux) + os.path.sep + "gpu2miner.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
             except Exception as e:
                 print(e)
 
@@ -765,13 +793,14 @@ class gui():
         self.started_cpu_hs = 0
 
         threads = self.combobox_threads.get_active_text()
-        prc = cpuminer_path +  " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x  -t " + str(threads)
+        prc = raw(cpuminer_path,self.is_linux) +  " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x  -t " + str(threads)
         print(prc)
         try:
             if self.is_linux:
                 subprocess.call(prc + " > " + dita_dir + os.path.sep + "cpuminer.txt &", shell=True)
             else:
-                self.cpuminer_proc = subprocess.Popen(prc + " > " + dita_dir + os.path.sep + "cpuminer.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
+                print(prc + " > " + raw(dita_dir,self.is_linux) + os.path.sep + "cpuminer.txt")
+                subprocess.Popen(prc + " > " + raw(dita_dir,self.is_linux) + os.path.sep + "cpuminer.txt" , shell=True, stdout=sys.stdout, stderr=sys.stderr)
         except Exception as e:
             print(e)
         self.started_cpu_title = key

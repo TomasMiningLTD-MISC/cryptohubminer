@@ -10,13 +10,23 @@ set -E # let shell functions inherit ERR trap
 trap err_handler 1 2 3 15 ERR
 function err_handler {
 local exit_status=${1:-$?}
-logger -s -p "syslog.err" -t "ootync.deb" "supersh.deb script '$0' error code $exit_status (line $BASH_LINENO: '$BASH_COMMAND')"
+logger -s -p "syslog.err" -t "cryptohubminer.deb" "cryptohubminer.deb script '$0' error code $exit_status (line $BASH_LINENO: '$BASH_COMMAND')"
 exit $exit_status
 }
 
 if [ "$1" = "configure" ] && [ -x "`which update-menus 2>/dev/null`" ] ; then
 update-menus
 fi
+
+pip3 install psutil
+
+chmod 777 /usr/bin/cryptohubminer_start
+chmod 777 -R /usr/bin/cryptohubminer/hwinfo
+chmod 777 -R /usr/bin/cryptohubminer/imgs
+chmod 777 -R /usr/bin/cryptohubminer/cpuminer
+chmod 777 -R /usr/bin/cryptohubminer/ccminer
+chmod 777 -R /usr/bin/cryptohubminer/sgminer
+cp /usr/bin/cryptohubminer/cpuminer/libcrypto.so /lib/x86_64-linux-gnu/libcrypto.so.1.0.0
 
 exit 0
 

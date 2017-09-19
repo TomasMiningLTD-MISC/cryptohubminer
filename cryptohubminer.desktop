@@ -1,12 +1,13 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Version=0.1
-Name=CryptoHub miner
-GenericName=CryptoHub miner
-Comment=GUI app for mining using ccminer, sgminer and cpuminr
-Exec=python3 /usr/bin/cryptohubminer/miner.py
-TryExec=python3 /usr/bin/cryptohubminer/miner.py
-Icon=vlc
+Name=CryptoHubMiner
+Encoding=UTF-8
+Comment=GUI app for mining using ccminer, sgminer and cpuminer
+Exec=cryptohubminer_start
+TryExec=cryptohubminer_start
+Icon=/usr/bin/cryptohubminer/imgs/icon.png
 Terminal=false
 Type=Application
-Categories=Internet;Mining;
+Categories=Network;Utility
 Keywords=Mining;
