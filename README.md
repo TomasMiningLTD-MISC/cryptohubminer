@@ -1,0 +1,2 @@
+# cryptohubminer
+GUI miner shell
