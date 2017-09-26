@@ -1,0 +1,13 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=0.1
+Name=CryptoHubMiner
+Encoding=UTF-8
+Comment=GUI app for mining using ccminer, sgminer and cpuminer
+Exec=cryptohubminer_start
+TryExec=cryptohubminer_start
+Icon=/usr/bin/cryptohubminer/imgs/icon.png
+Terminal=false
+Type=Application
+Categories=Network;Utility
+Keywords=Mining;
