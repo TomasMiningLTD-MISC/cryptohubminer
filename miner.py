@@ -10,7 +10,7 @@ except:
     import gtk as Gtk
     import gobject as GObject
     import gtk.gdk as Gdk
-import threading, subprocess, psutil
+import threading, subprocess, psutil #ps util windows 5.3.1
 import os
 import platform
 import datetime
@@ -28,6 +28,7 @@ def raw(text,linux):
 
 pools_cpu = {
     "Q2C": ["cryptohub.online:3042","qubit"],
+    "AMS": ["cryptohub.online:3028","xevan"],
 }
 
 
@@ -140,16 +141,40 @@ class gui():
             except:
                 if result == Gtk.RESPONSE_CANCEL:
                     return True
+        print("1")
         self.kill_miner("gpu")
         self.kill_miner("cpu")
+        print("2")
         log_f.close()
         Gtk.main_quit()
         return False
 
+    def add_menu_item(self, command, title):
+        aMenuitem = Gtk.MenuItem()
+        aMenuitem.set_label(title)
+        aMenuitem.connect("activate", command)
+
+        self.menu.append(aMenuitem)
+        self.menu.show_all()
+
+    def open_log_files_dir(self, add, **add2):
+        d = dita_dir
+        if sys.platform == 'win32':
+            subprocess.Popen(['start', d], shell=True)
+
+        elif sys.platform == 'darwin':
+            subprocess.Popen(['open', d])
+
+        else:
+            try:
+                subprocess.Popen(['xdg-open', d])
+            except OSError as e:
+                print(e)
+
     def __init__(self):
         self.window = Gtk.Window()
         self.window.set_resizable(False)
-        self.window.set_size_request(520, 750)
+        self.window.set_size_request(520, 550)
         self.window.set_title("CryptoHubMiner")
         self.window.connect('delete-event', self.on_destroy)
         try:
@@ -157,13 +182,28 @@ class gui():
         except:
             pass
 
-        print("here")
+        menu = Gtk.Menu()
+        menu2 = Gtk.Menu()
+        root_menu = Gtk.MenuItem("Preferences")
+        root_menu2 = Gtk.MenuItem("Help")
+
+
+        menu_items = Gtk.MenuItem("Open log files dir")
+        menu_items.connect("activate", self.open_log_files_dir)
+        menu2.append(menu_items)
+        root_menu2.set_submenu(menu2)
+
 
         self.box = Gtk.VBox()
         self.window.add(self.box)
+        menu_bar = Gtk.MenuBar()
+        self.box.pack_start(menu_bar, False, False, 2)
+        menu_bar.show()
+        menu_bar.append(root_menu)
+        menu_bar.append(root_menu2)
 
         self.hbox_status = Gtk.HBox()
-        self.box.pack_start(self.hbox_status, False, True, 30)
+        self.box.pack_start(self.hbox_status, False, True, 10)
 
 
 
@@ -183,7 +223,7 @@ class gui():
         self.hbox_status.pack_start(self.fr, True, True, 10)
 
         self.box_c1 = Gtk.VBox()
-        self.hbox_status.pack_start(self.box_c1, False, True, 30)
+        self.hbox_status.pack_start(self.box_c1, False, True, 10)
 
         self.label_title_cpu = Gtk.Label('')
         self.box_c1.pack_start(self.label_title_cpu, True, True, 0)
@@ -316,10 +356,10 @@ class gui():
 
 
         self.label_cpu = Gtk.Label("Enter your CryptoHub user:")
-        self.box.pack_start(self.label_cpu, True, True, 20)
+        self.box.pack_start(self.label_cpu, True, True, 5)
 
         self.user_input_box = Gtk.HBox()
-        self.box.pack_start(self.user_input_box, True, True, 10)
+        self.box.pack_start(self.user_input_box, True, True, 5)
 
 
 
@@ -330,7 +370,7 @@ class gui():
             pass
 
         self.user_input = Gtk.TextView()
-        self.user_input_box.pack_start(self.user_input_frame, True, True, 50)
+        self.user_input_box.pack_start(self.user_input_frame, True, True, 2)
         self.user_input_frame.add(self.user_input)
 
         try:
@@ -347,25 +387,26 @@ class gui():
 
         if self.old_cpu:
             self.label_cpu = Gtk.Label("Your CPU is too old and doesn't support AES nor AVX.")
-            self.box.pack_start(self.label_cpu, True, True, 20)
+            self.box.pack_start(self.label_cpu, True, True, 2)
         else:
             self.label_cpu = Gtk.Label("Select a coin to mine on CPU:")
-            self.box.pack_start(self.label_cpu, True, True, 20)
+            self.box.pack_start(self.label_cpu, True, True, 2)
             self.box_nv = Gtk.HBox()
-            self.box.pack_start(self.box_nv, True, True, 20)
+            self.box.pack_start(self.box_nv, True, True, 2)
 
             self.cpuhbox = Gtk.HBox()
-            self.box_nv.pack_start(self.cpuhbox, True, True, 10)
+            self.box_nv.pack_start(self.cpuhbox, True, True, 2)
 
             try:
                 self.combobox_cpu = Gtk.ComboBoxText()
             except:
                 self.combobox_cpu = Gtk.combo_box_new_text()
-            self.combobox_cpu.append_text("Q2C")
-            self.cpuhbox.pack_start(self.combobox_cpu, True, True, 10)
+            for k,el in pools_cpu.items():
+                self.combobox_cpu.append_text(k)
+            self.cpuhbox.pack_start(self.combobox_cpu, True, True, 2)
 
             self.label_cpu_threads = Gtk.Label("Threads:")
-            self.cpuhbox.pack_start(self.label_cpu_threads, False, True, 20)
+            self.cpuhbox.pack_start(self.label_cpu_threads, False, True, 2)
 
             try:
                 self.combobox_threads = Gtk.ComboBoxText()
@@ -378,31 +419,31 @@ class gui():
                 self.combobox_threads.set_active(0)
             except:
                 pass
-            self.cpuhbox.pack_start(self.combobox_threads, True, True, 10)
+            self.cpuhbox.pack_start(self.combobox_threads, True, True, 2)
 
 
 
             self.hbox = Gtk.HBox()
-            self.box.pack_start(self.hbox, True, True, 10)
+            self.box.pack_start(self.hbox, True, True, 3)
 
             self.cpu_button = Gtk.Button(label='Start')
             self.cpu_button.connect('clicked', self.on_cpu_button_clicked)
-            self.hbox.pack_start(self.cpu_button, True, True, 10)
+            self.hbox.pack_start(self.cpu_button, True, True, 3)
 
             self.cpu_button2 = Gtk.Button(label='Stop')
             self.cpu_button2.set_sensitive(False)
             self.cpu_button2.connect('clicked', self.on_cpu_button_clicked2)
-            self.hbox.pack_start(self.cpu_button2, True, True, 10)
+            self.hbox.pack_start(self.cpu_button2, True, True, 3)
 
 
 
         if self.nvidia:
 
             self.label_hashrate = Gtk.Label('Select a coin to mine on Nvidia GPU(s):')
-            self.box.pack_start(self.label_hashrate, True, True, 20)
+            self.box.pack_start(self.label_hashrate, True, True, 3)
 
             self.box_nv = Gtk.HBox()
-            self.box.pack_start(self.box_nv, True, True, 20)
+            self.box.pack_start(self.box_nv, True, True, 3)
 
             try:
                 self.combobox_gpu = Gtk.ComboBoxText()
@@ -411,28 +452,28 @@ class gui():
 
             for k,el in pools_gpu.items():
                 self.combobox_gpu.append_text(k)
-            self.box_nv.pack_start(self.combobox_gpu, True, True, 10)
+            self.box_nv.pack_start(self.combobox_gpu, True, True, 3)
 
             self.hbox = Gtk.HBox()
-            self.box.pack_start(self.hbox, True, True, 10)
+            self.box.pack_start(self.hbox, True, True, 3)
 
             self.gpu_button = Gtk.Button(label='Start')
             self.gpu_button.connect('clicked', self.on_gpu_button_clicked)
-            self.hbox.pack_start(self.gpu_button, True, True, 10)
+            self.hbox.pack_start(self.gpu_button, True, True, 3)
 
             self.gpu_buttonoff = Gtk.Button(label='Stop')
             self.gpu_buttonoff.set_sensitive(False)
             self.gpu_buttonoff.connect('clicked', self.on_gpu_button_off_clicked)
-            self.hbox.pack_start(self.gpu_buttonoff, True, True, 10)
+            self.hbox.pack_start(self.gpu_buttonoff, True, True, 3)
 
 
         if self.radeon:
 
             self.label_hashrate2 = Gtk.Label('Select a coin to mine on Radeon GPU(s):')
-            self.box.pack_start(self.label_hashrate2, True, True, 20)
+            self.box.pack_start(self.label_hashrate2, True, True, 3)
 
             self.box_nv2 = Gtk.HBox()
-            self.box.pack_start(self.box_nv2, True, True, 20)
+            self.box.pack_start(self.box_nv2, True, True, 3)
 
             try:
                 self.combobox_gpu2 = Gtk.ComboBoxText()
@@ -441,7 +482,7 @@ class gui():
 
             for k, el in pools_gpu2.items():
                 self.combobox_gpu2.append_text(k)
-            self.box_nv2.pack_start(self.combobox_gpu2, True, True, 10)
+            self.box_nv2.pack_start(self.combobox_gpu2, True, True, 3)
 
             try:
                 self.combobox_gpu2_platform = Gtk.ComboBoxText()
@@ -747,21 +788,36 @@ class gui():
             if self.nvidia:
                 prc_name = ccminer_app
                 for proc in psutil.process_iter():
-                    if proc.name() == prc_name:
-                        proc.kill()
+                    try:
+                        pinfo = proc.as_dict(attrs=['pid', 'name', 'username'])
+                    except psutil.NoSuchProcess:
+                        continue
+                    else:
+                        if pinfo['name'] == prc_name:
+                            proc.kill()
 
         if type == "gpu" or type == "gpu_radeon":
             if self.radeon:
                 prc_name = sgminer_app
                 for proc in psutil.process_iter():
-                    if proc.name() == prc_name:
-                        proc.kill()
+                    try:
+                        pinfo = proc.as_dict(attrs=['pid', 'name', 'username'])
+                    except psutil.NoSuchProcess:
+                        continue
+                    else:
+                        if pinfo['name'] == prc_name:
+                            proc.kill()
 
         if type == "cpu":
             prc_name = cpuminer_app
             for proc in psutil.process_iter():
-                if proc.name() == prc_name:
-                    proc.kill()
+                try:
+                    pinfo = proc.as_dict(attrs=['pid', 'name', 'username'])
+                except psutil.NoSuchProcess:
+                    continue
+                else:
+                    if pinfo['name'] == prc_name:
+                        proc.kill()
 
     def on_gpu_button_off_clicked(self, widget):
         self.kill_miner("gpu_nvidia")

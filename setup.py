@@ -65,7 +65,7 @@ data_files_gtk = (
 
 setup(
     windows=[{"script": "miner.py", 'icon_resources': [(1, "icon.ico")]}],
-    options={"py2exe": {'includes': 'cairo, pango, pangocairo, atk, gobject, gio, gtk.keysyms',}},
+    options={"py2exe": { 'dll_excludes': [ "IPHLPAPI.DLL", "NSI.dll",  "WINNSI.DLL",  "WTSAPI32.dll"], 'includes': ['cairo', 'pango', 'pangocairo', 'atk', 'gobject', 'gio', 'gtk.keysyms','psutil','_psutil_mswindows','psutil._psutil_windows','psutil._pswindows']}},
     zipfile=None,
     data_files=data_files_gtk
 )

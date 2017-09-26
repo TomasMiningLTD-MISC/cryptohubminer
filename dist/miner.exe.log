@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "miner.py", line 13, in <module>
+  File "psutil\__init__.pyc", line 137, in <module>
+ImportError: cannot import name _pswindows
+Traceback (most recent call last):
+  File "miner.py", line 13, in <module>
+  File "psutil\__init__.pyc", line 137, in <module>
+ImportError: cannot import name _pswindows
