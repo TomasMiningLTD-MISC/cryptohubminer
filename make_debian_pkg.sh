@@ -8,7 +8,7 @@ cp start.sh debian_pkg/usr/bin/cryptohubminer_start
 
 touch debian_pkg/DEBIAN/control
 echo -e  "Package: cryptohubminer" >> debian_pkg/DEBIAN/control
-echo -e  "Version: 0.1" >> debian_pkg/DEBIAN/control
+echo -e  "Version: 1.1" >> debian_pkg/DEBIAN/control
 echo -e  "Provides: cryptohubminer" >> debian_pkg/DEBIAN/control
 echo -e  "Maintainer: Cryptohub <support@cryptohub.online>" >> debian_pkg/DEBIAN/control
 echo -e  "Architecture: amd64" >> debian_pkg/DEBIAN/control
