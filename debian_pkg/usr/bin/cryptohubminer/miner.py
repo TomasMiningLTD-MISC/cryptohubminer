@@ -10,6 +10,8 @@ except:
     import gtk as Gtk
     import gobject as GObject
     import gtk.gdk as Gdk
+    import webbrowser
+
 import threading, subprocess, psutil #ps util windows 5.3.1
 import os
 import platform
@@ -17,6 +19,7 @@ import datetime
 import re
 import decimal
 import sys
+import json
 
 
 def raw(text,linux):
@@ -28,6 +31,7 @@ def raw(text,linux):
 
 pools_cpu = {
     "Q2C": ["cryptohub.online:3042","qubit"],
+    "AMS": ["cryptohub.online:3028","xevan"],
 }
 
 
@@ -116,6 +120,8 @@ class gui():
     cpu_threads = 1
     cpu_coin = None
     gpu_coin = None
+    intensity_managment_on = False
+    conf = {"intensity_managment_on": False, "intensity_nvidia": 0, "intensity_radeon": 0, "platform_radeon": 0}
     found_devices = []
     mining_log_sizes = {}
 
@@ -143,10 +149,75 @@ class gui():
         print("1")
         self.kill_miner("gpu")
         self.kill_miner("cpu")
+        with open(dita_dir + os.path.sep + 'conf.json','w') as json_data:
+            json.dump(self.conf, json_data)
         print("2")
         log_f.close()
         Gtk.main_quit()
         return False
+
+
+    def open_log_files_dir(self, add, **add2):
+        d = dita_dir
+        if sys.platform == 'win32':
+            subprocess.Popen(['start', d], shell=True)
+        elif sys.platform == 'darwin':
+            subprocess.Popen(['open', d])
+        else:
+            try:
+                subprocess.Popen(['xdg-open', d])
+            except OSError as e:
+                print(e)
+
+    def intensity_managment(self, obj):
+        if self.conf["intensity_managment_on"]:
+            self.conf["intensity_managment_on"] = False
+            if self.nvidia:
+                self.combobox_gpu_i.hide()
+        else:
+            self.conf["intensity_managment_on"] = True
+            if self.nvidia:
+                self.combobox_gpu_i.show()
+        self.menu1x1.set_active(self.conf["intensity_managment_on"])
+
+    def open_gui_miner_page(self, obj):
+        if sys.platform == 'win32':
+            subprocess.Popen(['start', self.menu2x3.get_uri()], shell=True)
+        else:
+            self.menu2x3.emit("clicked")
+
+
+    def create_menus(self):
+        root_menu = Gtk.MenuItem("Preferences")
+        menu1 = Gtk.Menu()
+        self.menu1x1 = Gtk.CheckMenuItem("Intensity managment")
+        if self.conf['intensity_managment_on']:
+            self.menu1x1.set_active(True)
+        self.menu1x1.connect("activate", self.intensity_managment)
+        menu1.append(self.menu1x1)
+        root_menu.set_submenu(menu1)
+
+        root_menu2 = Gtk.MenuItem("Help")
+        menu2 = Gtk.Menu()
+        menu2x1 = Gtk.MenuItem("Open log files dir")
+        menu2x1.connect("activate", self.open_log_files_dir)
+        menu2x2 = Gtk.MenuItem("Report problem")
+        menu2x2.connect("activate", self.open_gui_miner_page)
+
+        import time
+        #Gtk.show_uri(None,"http://cryptohub.online/gui_miner/#testing",int(time.mktime(datetime.datetime.now().timetuple())))
+        self.menu2x3 = Gtk.LinkButton("https://cryptohub.online/gui_miner/#testing", label=None)
+
+        menu2.append(menu2x1)
+        menu2.append(menu2x2)
+        root_menu2.set_submenu(menu2)
+
+        menu_bar = Gtk.MenuBar()
+        self.box.pack_start(menu_bar, False, False, 0)
+        menu_bar.show()
+        menu_bar.append(root_menu)
+        menu_bar.append(root_menu2)
+
 
     def __init__(self):
         self.window = Gtk.Window()
@@ -159,10 +230,17 @@ class gui():
         except:
             pass
 
-        print("here")
+        try:
+            with open(dita_dir + os.path.sep + 'conf.json') as json_data:
+                self.conf = json.load(json_data)
+        except:
+            pass
+
 
         self.box = Gtk.VBox()
         self.window.add(self.box)
+
+        self.create_menus()
 
         self.hbox_status = Gtk.HBox()
         self.box.pack_start(self.hbox_status, False, True, 10)
@@ -304,8 +382,8 @@ class gui():
             self.radeon = True
             #self.found_devices.append(dev_info)
 
-        print(self.found_devices)
 
+        print(self.found_devices)
 
 
         try:
@@ -341,7 +419,6 @@ class gui():
                 self.user_input.get_buffer().set_text(user)
         except Exception as e:
             print(e)
-            pass
 
 
         self.gtk_style()
@@ -353,17 +430,18 @@ class gui():
         else:
             self.label_cpu = Gtk.Label("Select a coin to mine on CPU:")
             self.box.pack_start(self.label_cpu, True, True, 2)
-            self.box_nv = Gtk.HBox()
-            self.box.pack_start(self.box_nv, True, True, 2)
+            self.box_nvcpu = Gtk.HBox()
+            self.box.pack_start(self.box_nvcpu, True, True, 2)
 
             self.cpuhbox = Gtk.HBox()
-            self.box_nv.pack_start(self.cpuhbox, True, True, 2)
+            self.box_nvcpu.pack_start(self.cpuhbox, True, True, 2)
 
             try:
                 self.combobox_cpu = Gtk.ComboBoxText()
             except:
                 self.combobox_cpu = Gtk.combo_box_new_text()
-            self.combobox_cpu.append_text("Q2C")
+            for k,el in pools_cpu.items():
+                self.combobox_cpu.append_text(k)
             self.cpuhbox.pack_start(self.combobox_cpu, True, True, 2)
 
             self.label_cpu_threads = Gtk.Label("Threads:")
@@ -408,12 +486,25 @@ class gui():
 
             try:
                 self.combobox_gpu = Gtk.ComboBoxText()
+                self.combobox_gpu_i = Gtk.ComboBoxText()
             except:
                 self.combobox_gpu = Gtk.combo_box_new_text()
+                self.combobox_gpu_i = Gtk.combo_box_new_text()
 
             for k,el in pools_gpu.items():
                 self.combobox_gpu.append_text(k)
             self.box_nv.pack_start(self.combobox_gpu, True, True, 3)
+
+
+            self.combobox_gpu_i.append_text("Intensity: auto")
+            self.combobox_gpu_i.append_text("Intensity: 13 (lowest)")
+            self.combobox_gpu_i.append_text("Intensity: 15 (low)")
+            self.combobox_gpu_i.append_text("Intensity: 17 (avg)")
+            self.combobox_gpu_i.append_text("Intensity: 19 (high)")
+            self.combobox_gpu_i.append_text("Intensity: 21 (highest)")
+            self.combobox_gpu_i.set_active(0)
+            self.box_nv.pack_start(self.combobox_gpu_i, True, True, 3)
+
 
             self.hbox = Gtk.HBox()
             self.box.pack_start(self.hbox, True, True, 3)
@@ -453,7 +544,10 @@ class gui():
             self.combobox_gpu2_platform.append_text("Platform 0")
             self.combobox_gpu2_platform.append_text("Platform 1")
             self.combobox_gpu2_platform.append_text("Platform 2")
-            self.combobox_gpu2_platform.set_active(0)
+            try:
+                self.combobox_gpu2_platform.set_active(self.conf['platform_radeon'])
+            except:
+                self.combobox_gpu2_platform.set_active(0)
             self.box_nv2.pack_start(self.combobox_gpu2_platform, True, True, 10)
             self.label_sel_platform = Gtk.Label('If mining doesnt work try to choose another platform')
             if self.nvidia:
@@ -483,8 +577,13 @@ class gui():
         GObject.timeout_add(1000, self.upd)
 
         self.window.show_all()
-
-
+        if not self.conf["intensity_managment_on"] and self.nvidia:
+            self.combobox_gpu_i.hide()
+        if self.conf["intensity_nvidia"] and self.nvidia:
+            try:
+                self.combobox_gpu_i.set_active(int(self.conf["intensity_nvidia"]))
+            except:
+                pass
 
         Gdk.threads_enter()
         Gtk.main()
@@ -691,6 +790,10 @@ class gui():
         print(pool)
         if self.nvidia:
             prc = raw(ccminer_path,self.is_linux) + " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
+            i = self.combobox_gpu_i.get_active_text().replace("Intensity: ","").split(" ")[0]
+            if i != "auto":
+                prc = prc + " -i " + str(i)
+                self.conf["intensity_nvidia"] = self.combobox_gpu_i.get_active()
             print(prc)
             try:
                 if self.is_linux:
@@ -706,6 +809,7 @@ class gui():
             self.gpu_button.set_sensitive(False)
             self.gpu_buttonoff.set_sensitive(True)
             self.combobox_gpu.set_sensitive(False)
+            self.combobox_gpu_i.set_sensitive(False)
 
     def on_gpu_button_clicked2(self, widget):
         key = self.combobox_gpu2.get_active_text()
@@ -723,6 +827,7 @@ class gui():
         if self.radeon:
             platform = self.combobox_gpu2_platform.get_active_text()
             platform = platform.replace("Platform ","")
+            self.conf['platform_radeon'] = self.combobox_gpu2_platform.get_active()
             prc = raw(sgminer_path,self.is_linux) + " --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v --gpu-platform " + platform
             print(prc)
             try:
@@ -787,6 +892,7 @@ class gui():
         self.started_gpu_nvidia = False
         self.started_gpu = False
         self.combobox_gpu.set_sensitive(True)
+        self.combobox_gpu_i.set_sensitive(True)
 
     def on_gpu_button_off2_clicked(self, widget):
         self.kill_miner("gpu_radeon")
@@ -848,7 +954,7 @@ class gui():
             css = b"""
     * {
         transition-property: color, background-color, border-color, background-image, padding, border-width;
-        transition-duration: 0.6s;
+        transition-duration: 0.1s;
         font-size: 14px;
     }
 

@@ -1,5 +1,5 @@
 Package: cryptohubminer
-Version: 0.1
+Version: 1.1
 Provides: cryptohubminer
 Maintainer: Cryptohub <support@cryptohub.online>
 Architecture: amd64

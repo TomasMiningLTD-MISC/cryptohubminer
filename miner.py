@@ -10,6 +10,8 @@ except:
     import gtk as Gtk
     import gobject as GObject
     import gtk.gdk as Gdk
+    import webbrowser
+
 import threading, subprocess, psutil #ps util windows 5.3.1
 import os
 import platform
@@ -179,7 +181,11 @@ class gui():
         self.menu1x1.set_active(self.conf["intensity_managment_on"])
 
     def open_gui_miner_page(self, obj):
-        self.menu2x3.emit("clicked")
+        if sys.platform == 'win32':
+            subprocess.Popen(['start', self.menu2x3.get_uri()], shell=True)
+        else:
+            self.menu2x3.emit("clicked")
+
 
     def create_menus(self):
         root_menu = Gtk.MenuItem("Preferences")
@@ -197,6 +203,9 @@ class gui():
         menu2x1.connect("activate", self.open_log_files_dir)
         menu2x2 = Gtk.MenuItem("Report problem")
         menu2x2.connect("activate", self.open_gui_miner_page)
+
+        import time
+        #Gtk.show_uri(None,"http://cryptohub.online/gui_miner/#testing",int(time.mktime(datetime.datetime.now().timetuple())))
         self.menu2x3 = Gtk.LinkButton("https://cryptohub.online/gui_miner/#testing", label=None)
 
         menu2.append(menu2x1)
