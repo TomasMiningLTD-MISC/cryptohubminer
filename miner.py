@@ -12,12 +12,15 @@ except:
     import gtk.gdk as Gdk
     import webbrowser
 
-import threading, subprocess, psutil #ps util windows 5.3.1
+try:
+    import urllib.request as urllib2
+except ImportError:
+    import urllib2
+
+import subprocess, psutil #ps util windows 5.3.1
 import os
 import platform
 import datetime
-import re
-import decimal
 import sys
 import json
 
@@ -30,24 +33,38 @@ def raw(text,linux):
 
 
 pools_cpu = {
-    "Q2C": ["cryptohub.online:3042","qubit"],
-    "AMS": ["cryptohub.online:3028","xevan"],
+
 }
 
 
 pools_gpu = {
-    "XLR": ["cryptohub.online:3032","nist5"],
-    "WYV": ["cryptohub.online:3052","nist5"],
-    "Q2C": ["cryptohub.online:3042","qubit"],
-    "ONION": ["cryptohub.online:3101","x13"],
+
 }
 
 #radeon
 pools_gpu2 = {
-    "XLR": ["cryptohub.online:3032","nist5"],
-    "WYV": ["cryptohub.online:3052","nist5"],
-    "Q2C": ["cryptohub.online:3042","qubitcoin"],
+
 }
+
+response = urllib2.urlopen('https://cryptohub.online/api/pools_info/')
+resp = response.read()
+try:
+    data = json.loads(resp.decode())
+except:
+    data = json.loads(resp)
+
+for el in data["pools"]:
+    if el['pool_port']:
+        code = el["code"]
+        if el["algo"] in ["xevan","blake2s","keccak","neoscrypt","tribus","polytimos"]:
+            if code != "XLR":
+                pools_cpu[code] = ["cryptohub.online:" + el['pool_port'], el["algo"]]
+            pools_gpu[code] = ["cryptohub.online:" + el['pool_port'], el["algo"]]
+        if el["algo"] in ["xevan",  "keccak"]:
+            if (sys.platform == 'linux2' or sys.platform == 'linux') and el["algo"] == "xevan":
+                continue
+            pools_gpu2[code] = ["cryptohub.online:" + el['pool_port'], el["algo"]]
+
 
 def get_data_dir():
     print(sys.platform)
@@ -71,29 +88,38 @@ print(app_dir)
 if sys.platform == 'linux2' or sys.platform == 'linux':
     ccminer_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminer"
     ccminer_app = "ccminer"
+    ccminerxevan_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminerxevan"
+    ccminerxevan_app = "ccminerxevan"
     cpuminer_path = app_dir + os.path.sep + "cpuminer" + os.path.sep + "cpuminer"
     cpuminer_app = "cpuminer"
     sgminer_path = app_dir + os.path.sep + "sgminer" + os.path.sep + "sgminer"
     sgminer_app = "sgminer"
+    sgminerxevan_path = app_dir + os.path.sep + "sgminerxevan" + os.path.sep + "sgminerxevan"
+    sgminerxevan_app = "sgminerxevan"
 
 elif sys.platform == "win32" or sys.platform == "cygwin":
-    ccminer_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminerAlexis78.exe"
-    ccminer_app = "ccminerAlexis78.exe"
+    ccminer_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminer.exe"
+    ccminer_app = "ccminer.exe"
+    ccminerxevan_path = app_dir + os.path.sep + "ccminer" + os.path.sep + "ccminerxevan.exe"
+    ccminerxevan_app = "ccminerxevan.exe"
     cpuminer_path = app_dir + os.path.sep + "cpuminer" + os.path.sep + "cpuminer-aes-avx.exe"
     cpuminer_app = "cpuminer-aes-avx.exe"
     sgminer_path = app_dir + os.path.sep + "sgminer_windows" + os.path.sep + "sgminer.exe"
     sgminer_app = "sgminer.exe"
+    sgminerxevan_path = app_dir + os.path.sep + "sgminerxevan_windows" + os.path.sep + "sgminerxevan.exe"
+    sgminerxevan_app = "sgminerxevan.exe"
 
 def rel_path(dir, file):
     return app_dir + os.path.sep + dir + os.path.sep + file
 
 
-
-
-
 log_f = open(dita_dir + os.path.sep + 'log.txt', 'w')
 sys.stdout = log_f
 sys.stderr = log_f
+
+
+
+
 
 
 class gui():
@@ -789,9 +815,17 @@ class gui():
         pool = pools_gpu[key]
         print(pool)
         if self.nvidia:
-            prc = raw(ccminer_path,self.is_linux) + " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
+            if pool[1] == "xevan":
+                path = ccminerxevan_path
+            else:
+                path = ccminer_path
+
+            prc = raw(path,self.is_linux) + " -a " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x"
             i = self.combobox_gpu_i.get_active_text().replace("Intensity: ","").split(" ")[0]
+            print(i)
             if i != "auto":
+                if pool[1] == "blake2s":
+                    i += 4
                 prc = prc + " -i " + str(i)
                 self.conf["intensity_nvidia"] = self.combobox_gpu_i.get_active()
             print(prc)
@@ -825,10 +859,18 @@ class gui():
         pool = pools_gpu2[key]
 
         if self.radeon:
+
+            if pool[1] == "xevan":
+                path = sgminerxevan_path
+            else:
+                path = sgminer_path
+
             platform = self.combobox_gpu2_platform.get_active_text()
             platform = platform.replace("Platform ","")
             self.conf['platform_radeon'] = self.combobox_gpu2_platform.get_active()
-            prc = raw(sgminer_path,self.is_linux) + " --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 21 -T -v --gpu-platform " + platform
+            prc = raw(path,self.is_linux) + " --algorithm " + pool[1] + " -o stratum+tcp://" + pool[0] + " -u " + user + " -p x --intensity 19 -T -v --gpu-platform " + platform
+            if pool[1] == "xevan":
+                prc = prc + " --difficulty-multiplier 0.0039"
             print(prc)
             try:
                 if self.is_linux:
@@ -853,25 +895,27 @@ class gui():
         if type == "gpu" or type == "gpu_nvidia":
             if self.nvidia:
                 prc_name = ccminer_app
+                prc_name2 = ccminerxevan_app
                 for proc in psutil.process_iter():
                     try:
                         pinfo = proc.as_dict(attrs=['pid', 'name', 'username'])
                     except psutil.NoSuchProcess:
                         continue
                     else:
-                        if pinfo['name'] == prc_name:
+                        if pinfo['name'] == prc_name or pinfo['name'] == prc_name2:
                             proc.kill()
 
         if type == "gpu" or type == "gpu_radeon":
             if self.radeon:
                 prc_name = sgminer_app
+                prc_name2 = sgminerxevan_app
                 for proc in psutil.process_iter():
                     try:
                         pinfo = proc.as_dict(attrs=['pid', 'name', 'username'])
                     except psutil.NoSuchProcess:
                         continue
                     else:
-                        if pinfo['name'] == prc_name:
+                        if pinfo['name'] == prc_name or pinfo['name'] == prc_name2:
                             proc.kill()
 
         if type == "cpu":
